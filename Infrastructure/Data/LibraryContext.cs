@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class StoreContext : DbContext
+    public class LibraryContext : DbContext
     {
-        public StoreContext(DbContextOptions<StoreContext> options) : base(options)
+        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
         {
         }
 

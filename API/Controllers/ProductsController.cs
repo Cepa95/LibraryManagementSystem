@@ -10,8 +10,8 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly StoreContext _context;
-        public ProductsController(StoreContext context)
+        private readonly LibraryContext _context;
+        public ProductsController(LibraryContext context)
         {
             _context = context;
         }
