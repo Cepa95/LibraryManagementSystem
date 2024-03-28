@@ -4,7 +4,7 @@ namespace Core.Entities
     {
         public DateTime BorrowedDate { get; set; }
 
-        public DateTime ReturnedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
 
         public int NumberOfBorrowedBooks { get; set; }
 

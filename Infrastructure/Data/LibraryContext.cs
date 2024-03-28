@@ -4,12 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class LibraryContext : DbContext
+    public class LibraryContext(DbContextOptions<LibraryContext> options) : DbContext(options)
     {
-        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
-        {
-        }
-
         public DbSet<User> Users { get; set; }
 
         public DbSet<Book> Book { get; set; }
