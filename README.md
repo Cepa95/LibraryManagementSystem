@@ -40,13 +40,13 @@ on library materials and users.
     - Modify and Update Category Details
     - Remove category
 - View all categories (with search, sorting and pagination)
-#### Works
+#### Publisher
 - Available operations:
-    - Add new work
-    - Modify and Update Work Details
-    - Remove work
+    - Add new Publisher
+    - Modify and Update Publisher Details
+    - Remove Publisher
 - Browse All Works (with Search, Filters, Sorting, and Pagination)
-- View All Copies of a Specific Work (with Search, Filters, and Pagination)
+- View All Copies of a Specific Publisher (with Search, Filters, and Pagination)
 #### Books
 - Available operations:
     - Add new book
