@@ -85,7 +85,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("NumberOfCopies")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("Pages")
                         .HasColumnType("integer");
@@ -95,7 +97,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
