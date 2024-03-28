@@ -1,14 +1,11 @@
+using System.Reflection;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class LibraryContext : DbContext
+    public class LibraryContext(DbContextOptions<LibraryContext> options) : DbContext(options)
     {
-        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
-        {
-        }
-
         public DbSet<User> Users { get; set; }
 
         public DbSet<Book> Book { get; set; }
@@ -27,6 +24,9 @@ namespace Infrastructure.Data
         {
             modelBuilder.Entity<AuthorBook>()
                 .HasKey(ab => new { ab.AuthorId, ab.BookId });
+            
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
