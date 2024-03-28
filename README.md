@@ -83,4 +83,4 @@ customer loyalty.
 
 ## ER diagram
 
-<img src="ER dijagram baze.jpg" alt="dijagram" width="800"/>
+<img src="ER diagram.jpg" alt="dijagram" width="800"/>
