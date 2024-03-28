@@ -5,7 +5,7 @@
 * [Technologies](#technologies)
 * [Goal of the Application](#goal-of-the-application)
 * [Business Logic](#business-logic)
-
+* [ER diagram](#er-diagram)
 
 ## General Info
 Library Management System is a web application that manages the library. It enables viewing the library catalog and taking actions 
@@ -80,3 +80,7 @@ renting books. Customers can register, log in securely, and browse our extensive
 efficiently check them out and place orders. The system manages inventory, tracks rentals, and facilitates secure transactions.
 Additionally, it provides personalized recommendations based on users' preferences and history, enhancing their experience and fostering
 customer loyalty.
+
+## ER diagram
+
+<img src="ER dijagram baze.jpg" alt="dijagram" width="800"/>
