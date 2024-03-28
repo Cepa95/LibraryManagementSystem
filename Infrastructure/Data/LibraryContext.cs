@@ -1,4 +1,4 @@
-using Core.Entitites;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
@@ -9,6 +9,24 @@ namespace Infrastructure.Data
         {
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Book> Book { get; set; }
+
+        public DbSet<Author> Author { get; set; }
+
+        public DbSet<AuthorBook> AuthorBook { get; set; }
+
+        public DbSet<Loan> Loan { get; set; }
+
+        public DbSet<Category> Category { get; set; }
+
+        public DbSet<Publisher> Publisher { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AuthorBook>()
+                .HasKey(ab => new { ab.AuthorId, ab.BookId });
+        }
     }
 }
