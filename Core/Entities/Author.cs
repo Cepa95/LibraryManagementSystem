@@ -2,11 +2,11 @@ namespace Core.Entities
 {
     public class Author : BaseEntity
     {
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
         
-        public string Biography { get; set; }
+        public required string Biography { get; set; }
 
     }
 }
