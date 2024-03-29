@@ -9,6 +9,12 @@ namespace Core.Specifications
             AddInclude(x => x.Category);
             AddInclude(x => x.Publisher);
         }
+
+        public BookWithCategoryAndPublisherSpecification(int id) : base(x => x.Id == id)
+        {
+            AddInclude(x => x.Category);
+            AddInclude(x => x.Publisher);
+        }
         
 
     }

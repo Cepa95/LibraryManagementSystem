@@ -26,7 +26,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBookByIdAsync(int id)
         {
-            var spec = new BookWithCategoryAndPublisherSpecification();
+            var spec = new BookWithCategoryAndPublisherSpecification(id);
             var book = await _bookRepository.GetEntityWithSpec(spec);
             if (book == null) return NotFound(); //posli cu dodati i custom error message
             return Ok(book);
