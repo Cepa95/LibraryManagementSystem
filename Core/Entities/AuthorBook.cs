@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using Core.Interfaces;
 
 namespace Core.Entities
 {
-    public class AuthorBook : BaseEntity
+    public class AuthorBook 
     {
 
-        public required Book Book { get; set; }
+        public Book Book { get; set; }
 
         [Key]
         public int BookId { get; set; }
 
-        public required Author Author { get; set; }
+        public Author Author { get; set; }
         
         [Key]
         public int AuthorId { get; set; }

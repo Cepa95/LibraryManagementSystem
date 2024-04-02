@@ -58,9 +58,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
                     b.HasKey("AuthorId", "BookId");
 
                     b.HasIndex("BookId");
@@ -80,7 +77,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
@@ -212,7 +208,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Role")

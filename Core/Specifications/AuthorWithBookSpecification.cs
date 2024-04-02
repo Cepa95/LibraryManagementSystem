@@ -10,11 +10,11 @@ namespace Core.Specifications
             AddInclude(x => x.Book);
         }
 
-        public AuthorWithBookSpecification(int id) : base(x => x.Id == id)
-        {
-            AddInclude(x => x.Author);
-            AddInclude(x => x.Book);
-        }
+        // public AuthorWithBookSpecification(int id) : base(x => x.Id == id)
+        // {
+        //     AddInclude(x => x.Author);
+        //     AddInclude(x => x.Book);
+        // }
         
 
     }
