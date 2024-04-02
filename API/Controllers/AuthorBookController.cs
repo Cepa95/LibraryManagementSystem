@@ -16,7 +16,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<AuthorBook>>>Async()
+        public async Task<ActionResult<IReadOnlyList<AuthorBook>>>ListAllAsync()
         {
             var spec = new AuthorWithBookSpecification();
             var AuthorBooks = await _AuthorBookRepository.ListAsync(spec);
