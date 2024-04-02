@@ -7,9 +7,9 @@ namespace API.Controllers
 {
     public class AuthorBookController : BaseApiController
     {
-        private readonly IGenericRepository<Book> _AuthorBookRepository;
+        private readonly IGenericRepository<AuthorBook> _AuthorBookRepository;
       
-        public AuthorBookController(IGenericRepository<Book> AuthorBookRepository)
+        public AuthorBookController(IGenericRepository<AuthorBook> AuthorBookRepository)
         {
             _AuthorBookRepository = AuthorBookRepository;
             
@@ -18,15 +18,15 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<AuthorBook>>>Async()
         {
-            var spec = new BookWithCategoryAndPublisherSpecification();
+            var spec = new AuthorWithBookSpecification();
             var AuthorBooks = await _AuthorBookRepository.ListAsync(spec);
             return Ok(AuthorBooks);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetAuthorBooksByIdAsync(int id)
+        public async Task<ActionResult<AuthorBook>> GetAuthorBooksByIdAsync(int id)
         {
-            var spec = new BookWithCategoryAndPublisherSpecification(id);
+            var spec = new AuthorWithBookSpecification(id);
             var AuthorBook = await _AuthorBookRepository.GetEntityWithSpec(spec);
             if (AuthorBook == null) return NotFound(); //posli cu dodati i custom error message
             return Ok(AuthorBook);
