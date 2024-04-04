@@ -13,7 +13,14 @@ namespace API.Helpers
                 .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher.Name));
 
             CreateMap<BookUpdateDto, Book>().ReverseMap();
+
+            CreateMap<AuthorDto,Author>().ReverseMap();
+
+            CreateMap<AuthorUpdateDto,Author>().ReverseMap();
                 
+            CreateMap<UserDto,User>().ReverseMap();
+
+            CreateMap<UserUpdateDto,User>().ReverseMap();
         }
 
     }
