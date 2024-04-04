@@ -11,6 +11,9 @@ namespace API.Helpers
             CreateMap<Book, BookDto>()
                 .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name))
                 .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publisher.Name));
+
+            CreateMap<BookUpdateDto, Book>().ReverseMap();
+                
         }
 
     }

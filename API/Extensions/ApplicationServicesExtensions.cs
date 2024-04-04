@@ -18,6 +18,7 @@ namespace API.Extensions
             {
                 options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAuthorBookRepository, AuthorBookRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

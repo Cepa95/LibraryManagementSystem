@@ -13,6 +13,15 @@ namespace Infrastructure.Data.Services
             _context = context;
         }
 
+        public void Add(T entity)
+        {
+            _context.Set<T>().Add(entity);
+        }
+
+        public void Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
 
 
         public async Task<T> GetByIdAsync(int id)
@@ -41,6 +50,13 @@ namespace Infrastructure.Data.Services
         {
             return await ApplySpecification(spec).ToListAsync();
         }
+
+        public void Update(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+
 
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
