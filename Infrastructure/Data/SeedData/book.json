@@ -1,0 +1,73 @@
+[
+    {
+        "Id": 1,
+        "Title": "Moby Dick",
+        "Description": "A novel by Herman Melville",
+        "Pages": 720,
+        "ImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Moby-Dick_FE_title_page.jpg/330px-Moby-Dick_FE_title_page.jpg",
+        "NumberOfCopies": 4,
+        "PublisherId": 1,
+        "CategoryId": 3
+    },
+    {
+        "Id": 2,
+        "Title": "The Catcher in the Rye",
+        "Description": "A novel by J. D. Salinger",
+        "Pages": 234,
+        "ImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/The_Catcher_in_the_Rye_%281951%2C_first_edition_cover%29.jpg/330px-The_Catcher_in_the_Rye_%281951%2C_first_edition_cover%29.jpg",
+        "NumberOfCopies": 3,
+        "PublisherId": 2,
+        "CategoryId": 2
+    },
+    {
+        "Id": 3,
+        "Title": "The Great Gatsby",
+        "Description": "A novel by F. Scott Fitzgerald",
+        "Pages": 218,
+        "ImageUrl": "https://images.booksense.com/images/338/268/9781782268338.jpg",
+        "NumberOfCopies": 5,
+        "PublisherId": 1,
+        "CategoryId": 2
+    },
+    {
+        "Id": 4,
+        "Title": "To Kill a Mockingbird",
+        "Description": "A novel by Harper Lee",
+        "Pages": 281,
+        "ImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg/330px-To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg",
+        "NumberOfCopies": 2,
+        "PublisherId": 3,
+        "CategoryId": 1
+    },
+    {
+        "Id": 5,
+        "Title": "1984",
+        "Description": "A novel by George Orwell",
+        "Pages": 328,
+        "ImageUrl": "https://upload.wikimedia.org/wikipedia/hr/7/7e/Orwell1984hrv.jpg",
+        "NumberOfCopies": 3,
+        "PublisherId": 4,
+        "CategoryId": 1
+    },
+    {
+        "Id": 6,
+        "Title": "Brave New World",
+        "Description": "A novel by Aldous Huxley",
+        "Pages": 311,
+        "ImageUrl": "https://upload.wikimedia.org/wikipedia/en/6/62/BraveNewWorld_FirstEdition.jpg",
+        "NumberOfCopies": 4,
+        "PublisherId": 5,
+        "CategoryId": 1
+    },
+    {
+        "Id": 7,
+        "Title": "The Lord of the Rings",
+        "Description": "A novel by J. R. R. Tolkien",
+        "Pages": 1178,
+        "ImageUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg",
+        "NumberOfCopies": 3,
+        "PublisherId": 6,
+        "CategoryId": 3
+    }
+
+]

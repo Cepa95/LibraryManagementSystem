@@ -12,11 +12,11 @@ namespace Core.Entities
 
         public int NumberOfCopies { get; set; }
 
-        public required Publisher Publisher { get; set; }
+        public Publisher Publisher { get; set; }
 
         public int PublisherId { get; set; }
 
-        public required Category Category { get; set; }
+        public Category Category { get; set; }
 
         public int CategoryId { get; set; }
         
