@@ -1,5 +1,6 @@
 using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -30,16 +31,23 @@ namespace API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyList<BookDto>>> GetBooksAsync()
+        public async Task<ActionResult<Pagination<BookDto>>> GetBooksAsync(
+            [FromQuery] BookParams bookparams)
         {
             _logger.LogInformation("Getting all books");
 
-            var spec = new BookWithCategoryAndPublisherSpecification();
-            var books = await _bookRepository.ListAsync(spec);
+            var spec = new BookWithCategoryAndPublisherSpecification(bookparams);
 
-            if (books == null) return NotFound(new ApiResponse(404, "Books are not found"));
+            var countSpec = new BookWithFiltersCountSpecification(bookparams);
 
-            return Ok(_mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookDto>>(books));
+            var totalItems = await _bookRepository.CountAsync(countSpec);
+
+             var books = await _bookRepository.ListAsync(spec);
+
+            var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookDto>>(books);
+           
+
+            return Ok(new Pagination<BookDto>(bookparams.PageIndex, bookparams.PageSize, totalItems, data));
         }
 
         [HttpGet("{id}")]

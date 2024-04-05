@@ -79,7 +79,8 @@ namespace Infrastructure.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "character varying(600)", maxLength: 600, nullable: false),
+                    SearchCriteria = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Pages = table.Column<int>(type: "integer", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: false),
                     NumberOfCopies = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),

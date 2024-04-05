@@ -77,7 +77,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -93,6 +95,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SearchCriteria")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Title")
                         .IsRequired()
