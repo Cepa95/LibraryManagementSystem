@@ -1,0 +1,68 @@
+[
+    {
+        "Id":1,
+        "FirstName":"Herman" ,
+        "LastName":"Melville",
+        "Biography":"Herman Melville, an American author born on August 1, 1819, in New York City, is best known for his iconic novel Moby Dick Melville's early life was marked by seafaring adventures, serving as inspiration for many of his literary works. His experiences aboard whaling ships and encounters with diverse cultures influenced his writing profoundly."
+    },
+    {
+        "Id":2,
+        "FirstName":"Jerome David",
+        "LastName":"Salinger",
+        "Biography":"J.D. Salinger, an enigmatic figure in American literature, was born on January 1, 1919, in New York City. Best known for his seminal work The Catcher in the Rye (1951), Salinger captured the essence of adolescent angst and disillusionment in post-World War II America."
+    },
+    {
+        "Id":3,
+        "FirstName":"Francis Scott",
+        "LastName":"Fitzgerald ",
+        "Biography":"Francis Scott Fitzgerald, born on September 24, 1896, in St. Paul, Minnesota, was a prominent American novelist and short story writer of the Jazz Age. Best known for his masterpiece The Great Gatsby (1925), Fitzgerald captured the essence of the Roaring Twenties and the disillusionment of the American Dream."
+    },
+    {
+        "Id":4,
+        "FirstName":"Harper",
+        "LastName":"Lee",
+        "Biography":"Harper Lee, born Nelle Harper Lee on April 28, 1926, in Monroeville, Alabama, was an acclaimed American author best known for her novel To Kill a Mockingbird(1960). This Pulitzer Prize-winning work explores themes of racial injustice and moral growth in the American South during the 1930s."
+    },
+    {
+        "Id":5,
+        "FirstName":"George",
+        "LastName":"Orwell",
+        "Biography":"George Orwell, born Eric Arthur Blair on June 25, 1903, in Motihari, India, was a British novelist, essayist, and critic. Renowned for his penetrating social and political commentary, Orwell's works, including Animal Farm (1945) and Nineteen Eighty-Four (1949), are considered masterpieces of dystopian fiction."
+    },
+    {
+        "Id":6,
+        "FirstName":"Aldous",
+        "LastName":"Huxley",
+        "Biography":"Aldous Huxley, born on July 26, 1894, in Godalming, England, was a British writer and philosopher. Best known for his groundbreaking novel Brave New World (1932), Huxley explored themes of technology, society, and individual freedom."
+    },
+    {
+        "Id":7,
+        "FirstName":"John Ronald Reuel",
+        "LastName":"Tolkien",
+        "Biography":"J.R.R. Tolkien, born John Ronald Reuel Tolkien on January 3, 1892, in Bloemfontein, South Africa, was an English writer, poet, and philologist. Best known for his epic high-fantasy works The Hobbit (1937) and The Lord of the Rings trilogy (1954-1955), Tolkien crafted richly imagined worlds inhabited by diverse characters, cultures, and languages."
+    },
+    {
+        "Id":8,
+        "FirstName":"Clive Staples",
+        "LastName":"Lewis",
+        "Biography":"C.S. Lewis, born Clive Staples Lewis on November 29, 1898, in Belfast, Ireland, was a British writer, scholar, and Christian apologist. Best known for his beloved children's series The Chronicles of Narnia (1950-1956), Lewis enchanted readers with his imaginative storytelling and profound moral allegories."
+    },
+    {
+        "Id":9,
+        "FirstName":"Douglas",
+        "LastName":"Adams",
+        "Biography":"Douglas Adams, born on March 11, 1952, in Cambridge, England, was a British author and humorist best known for his science fiction series The Hitchhiker's Guide to the Galaxy (1979-2009). Adams' wit and imagination captivated readers, blending absurdity with philosophical ponderings in a cosmic adventure across the universe."
+    },
+    {
+        "Id":10,
+        "FirstName":"Suzanne",
+        "LastName":"Collins",
+        "Biography":"Suzanne Collins, born on August 10, 1962, in Hartford, Connecticut, is an American author best known for her bestselling young adult dystopian trilogy, The Hunger Games (2008-2010). Collins' gripping storytelling and exploration of themes like survival, power, and sacrifice captivated readers of all ages, earning her widespread acclaim and literary accolades."
+    },
+    {
+        "Id":11,
+        "FirstName":"Dan",
+        "LastName":"Brown",
+        "Biography":"Dan Brown, born on June 22, 1964, in Exeter, New Hampshire, is an American author known for his bestselling thriller novels, most notably The Da Vinci Code (2003). Brown's gripping narratives, steeped in historical mysteries and religious symbolism, have captivated millions of readers worldwide."
+    }
+]
