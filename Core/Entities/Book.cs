@@ -6,6 +6,8 @@ namespace Core.Entities
 
         public required string Description { get; set; }
 
+        public required string SearchCriteria { get; set; }
+
         public int Pages { get; set; }
 
         public required string ImageUrl { get; set; }
@@ -19,6 +21,6 @@ namespace Core.Entities
         public Category Category { get; set; }
 
         public int CategoryId { get; set; }
-        
+
     }
 }

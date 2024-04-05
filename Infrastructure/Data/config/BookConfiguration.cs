@@ -11,6 +11,8 @@ namespace Infrastructure.Data.config
         {
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.Title).IsRequired().HasMaxLength(100);
+            builder.Property(p => p.Description).IsRequired().HasMaxLength(600);
+            builder.Property(p => p.SearchCriteria).IsRequired().HasMaxLength(200);
             builder.Property(p => p.Pages).IsRequired();
             builder.Property(p => p.ImageUrl).IsRequired();
             builder.Property(p => p.NumberOfCopies).IsRequired().HasDefaultValue(0);

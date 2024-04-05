@@ -18,6 +18,11 @@ namespace Infrastructure.Data.Services
             _context.Set<T>().Add(entity);
         }
 
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
+
         public void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);

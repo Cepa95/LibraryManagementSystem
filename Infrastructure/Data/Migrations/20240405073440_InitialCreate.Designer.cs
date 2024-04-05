@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20240402120525_InitialCreate")]
+    [Migration("20240405073440_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -80,7 +80,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -96,6 +98,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SearchCriteria")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Title")
                         .IsRequired()
