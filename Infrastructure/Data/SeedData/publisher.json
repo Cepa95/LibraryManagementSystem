@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "Name": "Hachette Livre"
+    },
+    {
+        "id": 2,
+        "Name": "Holtzbrinck"
+    },
+    {
+        "id": 3,
+        "Name": "HarperCollins"
+    },
+    {
+        "id": 4,
+        "Name": "Cengage Learning"
+    },
+    {
+        "id": 5,
+        "Name": "Macmillan Publishers"
+    },
+    {
+        "id": 6,
+        "Name": "Penguin Random House"
+    },
+    {
+        "id": 7,
+        "Name": "Pearson"
+    },
+    {
+        "id": 8,
+        "Name": "Scholastic"
+    },
+    {
+        "id": 9,
+        "Name": "Simon & Schuster"
+    },
+    {
+        "id": 10,
+        "Name": "Wiley"
+    }
+]

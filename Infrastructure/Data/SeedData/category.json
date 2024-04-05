@@ -1,0 +1,126 @@
+[
+    {
+        "Id": 1,
+        "Name": "Art"
+    },
+    {
+        "Id": 2,
+        "Name": "Biography"
+    },
+    {
+        "Id": 3,
+        "Name": "Cooking"
+    },
+    {
+        "Id": 4,
+        "Name": "Comics"
+    },
+    {
+        "Id": 5,
+        "Name": "Diary"
+    },
+    {
+        "Id": 6,
+        "Name": "Devotional"
+    },
+    {
+        "Id": 7,
+        "Name": "Health"
+    },
+    {
+        "Id": 8,
+        "Name": "History"
+    },
+    {
+        "Id": 9,
+        "Name": "Religion"
+    },
+    {
+        "Id": 10,
+        "Name": "Psychology"
+    },
+    {
+        "Id": 11,
+        "Name": "Science"
+    },
+    {
+        "Id": 12,
+        "Name": "Science Fiction"
+    },
+    {
+        "Id": 13,
+        "Name": "Prayer"
+    },
+    {
+        "Id": 14,
+        "Name": "Philosophy"
+    },
+    {
+        "Id": 15,
+        "Name": "Poetry"
+    },
+    {
+        "Id": 16,
+        "Name": "Romance"
+    },
+    {
+        "Id": 17,
+        "Name": "Horror"
+    },
+    {
+        "Id": 18,
+        "Name": "Thriller"
+    },
+    {
+        "Id": 19,
+        "Name": "Textbook"
+    },
+    {
+        "Id": 20,
+        "Name": "Travel"
+    },
+    {
+        "Id": 21,
+        "Name": "Workbook"
+    },
+    {
+        "Id": 22,
+        "Name": "Autobiography"
+    },
+    {
+        "Id": 23,
+        "Name": "Journal"
+    },
+    {
+        "Id": 24,
+        "Name": "Self-Help"
+    },
+    {
+        "Id": 25,
+        "Name": "Music"
+    },
+    {
+        "Id": 26,
+        "Name": "Fantasy"
+    },
+    {
+        "Id": 27,
+        "Name": "Manual"
+    },
+    {
+        "Id": 28,
+        "Name": "Mystery"
+    },
+    {
+        "Id": 29,
+        "Name": "Non-Fiction"
+    },
+    {
+        "Id": 30,
+        "Name": "Historical Fiction"
+    },
+    {
+        "Id": 31,
+        "Name": "Health"
+    }
+]
