@@ -1,34 +1,27 @@
 <div class="container">
   <div class="row">
-   
-     
-  
     <section class="col-3">
-        <h5 class="text-warning ms-3">Sort</h5>
-        <select class="form-select my-3">
-            <option selected>Alphabetical: A to Z</option>
-            <option>Alphabetical: Z to A</option>
-            <option>Pages: more to less</option>
-            <option>Pages: less to more</option>
-            <option>Copies: more to less</option>
-            <option>Copies: less to more</option>
-            
-        </select>
+      <h5 class="text-warning ms-3">Sort</h5>
+      <select class="form-select my-3">
+        <option selected>Alphabetical: A to Z</option>
+        <option>Alphabetical: Z to A</option>
+        <option>Pages: more to less</option>
+        <option>Pages: less to more</option>
+        <option>Copies: more to less</option>
+        <option>Copies: less to more</option>
+      </select>
+      <h5 class="text-warning ms-3">Categories</h5>
+      <select class="form-select my-3">
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
+        </option>
+      </select>
+
       <h5 class="text-warning ms-3">Publishers</h5>
       <ul class="list-group my-3">
-        <li class="list-group-item active">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-        <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-      </ul>
-      <h5 class="text-warning ms-3">Categories</h5>
-      <ul class="list-group my-3">
-        <li class="list-group-item active">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-        <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
+        <li class="list-group-item" *ngFor="let publisher of publishers">
+          {{ publisher.name }}
+        </li>
       </ul>
     </section>
     <section class="col-9">
@@ -51,9 +44,9 @@
       </div>
       <div class="row">
         <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
-            <app-book-item [book]="book"></app-book-item>
+          <app-book-item [book]="book"></app-book-item>
         </div>
-    </div>
+      </div>
     </section>
   </div>
 </div>

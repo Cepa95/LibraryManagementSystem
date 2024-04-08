@@ -3,15 +3,15 @@
       src="{{ book.imageUrl }}"
       alt="{{ book.title }}"
       class="card-img-top"
-      style="max-height: 310px; width: auto"
+      style="max-height: 300px; width: auto"
     />
     <div class="card-body">
       <a href="" class="text-decoration-none">
-        <h5 class="card-title">{{ book.title }}</h5></a
-      >
+        <h5 class="card-title" style="height: 3em; overflow: hidden; text-overflow: ellipsis;">{{ book.title }}</h5>
+      </a>
       <div class="btn-group mt-auto d-flex justify-content-center">
         <button class="btn btn-sm btn-primary mr-2">View </button>
         <button class="btn btn-sm btn-success">Loan</button>
       </div>
     </div>
-  </div>
+</div>
