@@ -1,5 +1,59 @@
-<ul>
-  <li *ngFor="let book of books">
-    {{ book.title }}
-  </li>
-</ul>
+<div class="container">
+  <div class="row">
+   
+     
+  
+    <section class="col-3">
+        <h5 class="text-warning ms-3">Sort</h5>
+        <select class="form-select my-3">
+            <option selected>Alphabetical: A to Z</option>
+            <option>Alphabetical: Z to A</option>
+            <option>Pages: more to less</option>
+            <option>Pages: less to more</option>
+            <option>Copies: more to less</option>
+            <option>Copies: less to more</option>
+            
+        </select>
+      <h5 class="text-warning ms-3">Publishers</h5>
+      <ul class="list-group my-3">
+        <li class="list-group-item active">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+      <h5 class="text-warning ms-3">Categories</h5>
+      <ul class="list-group my-3">
+        <li class="list-group-item active">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+    </section>
+    <section class="col-9">
+      <div class="d-flex justify-content-between align-items-center pb-2">
+        <header class="d-flex align-items-center">
+          <span
+            >HARDCODED Showing <strong>12</strong> of
+            <strong>13</strong> results</span
+          >
+        </header>
+        <div class="d-flex mt-2">
+          <input
+            type="text"
+            placeholder="search"
+            class="form-control mt-2 mr-2"
+          />
+          &nbsp;&nbsp;
+          <button class="btn btn-primary mt-2">Search</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
+            <app-book-item [book]="book"></app-book-item>
+        </div>
+    </div>
+    </section>
+  </div>
+</div>
