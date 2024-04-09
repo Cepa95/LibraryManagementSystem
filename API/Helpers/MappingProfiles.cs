@@ -21,6 +21,10 @@ namespace API.Helpers
             CreateMap<UserDto,User>().ReverseMap();
 
             CreateMap<UserUpdateDto,User>().ReverseMap();
+
+            CreateMap<Category, CategoryDto>().ReverseMap();
+
+            CreateMap<Publisher, PublisherDto>().ReverseMap();
         }
 
     }

@@ -1,27 +1,44 @@
+using API.Dtos;
+using AutoMapper;
 using Core.Entities;
-using Infrastructure.Data;
+using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    
+
     public class CategoryController : BaseApiController
     {
-        private readonly LibraryContext _context;
-        public CategoryController(LibraryContext context)
+        private readonly IGenericRepository<Category> _categoryRepository;
+
+        private readonly ILogger<CategoryController> _logger;
+
+        private readonly IMapper _mapper;
+
+        public CategoryController(IGenericRepository<Category> categoryRepository, 
+                                  IMapper mapper,
+                                  ILogger<CategoryController> logger)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Category>>> GetCategories()
+        public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetCategories()
         {
-            var products = await _context.Category.ToListAsync();
+            _logger.LogInformation("Getting all categories");
 
-            return Ok(products);
+            var spec = new CategorySpecification();
+
+            var categories = await _categoryRepository.ListAsync(spec);
+
+            var categoryDtos = _mapper.Map<IReadOnlyList<CategoryDto>>(categories); 
+
+            return Ok(categoryDtos);
         }
 
-       
+
     }
 }

@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="row">
+    <section class="col-3">
+      <h5 class="text-warning ms-3">Sort</h5>
+      <select class="form-select my-3" (change)="onSortSelected($event)">
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">
+          {{ sort.name }}
+        </option>
+      </select>
+      <h5 class="text-warning ms-3">Categories</h5>
+      <select class="form-select my-3" (change)="onCategorySelected($event)">
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+
+      <h5 class="text-warning ms-3">Publishers</h5>
+      <ul class="list-group my-3">
+        <li
+          class="list-group-item"
+          *ngFor="let publisher of publishers"
+          [class.active]="publisher.id === libraryParams.publisherId"
+          [value]="publisher.id"
+          (click)="onPublisherSelected(publisher.id)"
+        >
+          {{ publisher.name }}
+        </li>
+      </ul>
+    </section>
+    <section class="col-9">
+      <div class="d-flex justify-content-between align-items-center pb-2">
+        <app-count-header
+          [pageNumber]="libraryParams.pageNumber"
+          [pageSize]="libraryParams.pageSize"
+          [totalCount]="totalCount"
+        >
+        </app-count-header>
+
+        <div class="d-flex mt-2">
+          <input
+            type="text"
+            placeholder="search"
+            class="form-control mt-2 mr-2"
+          />
+          &nbsp;&nbsp;
+          <button class="btn btn-primary mt-2">Search</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
+          <app-book-item [book]="book"></app-book-item>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-12 d-flex justify-content-center"
+          *ngIf="totalCount > 0"
+        >
+          <pagination
+            [boundaryLinks]="true"
+            [totalItems]="totalCount"
+            [maxSize]="3"
+            (pageChanged)="onPageChanged($event)"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          >
+          </pagination>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
