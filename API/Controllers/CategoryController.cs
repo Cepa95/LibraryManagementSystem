@@ -1,27 +1,29 @@
 using Core.Entities;
-using Infrastructure.Data;
+using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    
+
     public class CategoryController : BaseApiController
     {
-        private readonly LibraryContext _context;
-        public CategoryController(LibraryContext context)
+        private readonly IGenericRepository<Category> _categoryRepository;
+        public CategoryController(IGenericRepository<Category> categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Category>>> GetCategories()
         {
-            var products = await _context.Category.ToListAsync();
+            var spec = new CategorySpecification();
 
-            return Ok(products);
+            var categories = await _categoryRepository.ListAsync(spec);
+
+            return Ok(categories);
         }
 
-       
+
     }
 }
