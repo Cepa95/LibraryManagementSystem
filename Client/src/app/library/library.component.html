@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <section class="col-3">
+    <section class="col-12 col-md-3 order-1">
       <h5 class="text-warning ms-3">Sort</h5>
       <select class="form-select my-3" (change)="onSortSelected($event)">
         <option *ngFor="let sort of sortOptions" [value]="sort.value">
@@ -27,7 +27,7 @@
         </li>
       </ul>
     </section>
-    <section class="col-9">
+    <section class="col-12 col-md-9 order-2">
       <div class="d-flex justify-content-between align-items-center pb-2">
         <app-count-header
           [pageNumber]="libraryParams.pageNumber"
@@ -41,9 +41,13 @@
             type="text"
             placeholder="search"
             class="form-control mt-2 mr-2"
+            (keyup)="searchUpdated.next(search.value)"
+            #search
           />
           &nbsp;&nbsp;
-          <button class="btn btn-primary mt-2">Search</button>
+          <button (click)="onSearch(search.value)" class="btn btn-primary mt-2" >Search</button>
+          &nbsp;
+          <button (click)="onReset()" class="btn btn-warning mt-2">Reset</button>
         </div>
       </div>
       <div class="row">

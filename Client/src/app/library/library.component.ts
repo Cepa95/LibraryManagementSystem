@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Book } from '../shared/models/book';
 import { LibraryService } from './library.service';
 import { Publisher } from '../shared/models/publisher';
 import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-library',
@@ -11,6 +12,7 @@ import { LibraryParams } from '../shared/models/libraryParams';
   styleUrl: './library.component.scss',
 })
 export class LibraryComponent implements OnInit {
+  @ViewChild('search') searchTerm?: ElementRef;
   books: Book[] = [];
   publishers: Publisher[] = [];
   categories: Category[] = [];
@@ -25,9 +27,15 @@ export class LibraryComponent implements OnInit {
   ];
 
   totalCount = 0;
+  searchUpdated = new Subject<string>();
 
-  constructor(private libraryService: LibraryService) {}
+  
 
+  constructor(private libraryService: LibraryService) {
+    this.searchUpdated.pipe(
+      debounceTime(300)
+    ).subscribe(search => this.onSearch(search));
+  }
   ngOnInit(): void {
     this.getBooks();
     this.getPublishers();
@@ -64,11 +72,13 @@ export class LibraryComponent implements OnInit {
 
   onCategorySelected(event: any) {
     this.libraryParams.categoryId = +event.target.value;
+    this.libraryParams.pageNumber = 1;
     this.getBooks();
   }
 
   onPublisherSelected(publisherId: number) {
     this.libraryParams.publisherId = publisherId;
+    this.libraryParams.pageNumber = 1;
     this.getBooks();
   }
 
@@ -82,5 +92,17 @@ export class LibraryComponent implements OnInit {
       this.libraryParams.pageNumber = event.page;
       this.getBooks();
     }
+  }
+
+  onSearch(search: string) {
+    this.libraryParams.search = search;
+    this.libraryParams.pageNumber = 1;
+    this.getBooks();
+  }
+
+  onReset(){
+    if (this.searchTerm) this.searchTerm.nativeElement.value = '';
+    this.libraryParams = new LibraryParams();
+    this.getBooks();
   }
 }

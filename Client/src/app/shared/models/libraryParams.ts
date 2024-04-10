@@ -4,4 +4,5 @@ export class LibraryParams {
   sort = 'titleAsc';
   pageNumber = 1;
   pageSize = 12;
+  search = '';
 }
