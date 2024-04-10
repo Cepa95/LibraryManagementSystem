@@ -6,13 +6,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { LibraryModule } from './library/library.module';
+import { NavBarComponent } from './core/nav-bar/nav-bar.component';
+import { LoginComponent } from './core/login/login.component';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
-
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -20,8 +21,7 @@ import { LibraryModule } from './library/library.module';
     BrowserAnimationsModule,
     CoreModule,
     HttpClientModule,
-    LibraryModule
-  
+    LibraryModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
