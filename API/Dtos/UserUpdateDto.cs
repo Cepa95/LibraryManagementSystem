@@ -12,7 +12,7 @@ namespace API.Dtos
 
         public required string PhoneNumber { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTimeOffset  DateOfBirth { get; set; }
         
         public required string Role { get; set; }
         

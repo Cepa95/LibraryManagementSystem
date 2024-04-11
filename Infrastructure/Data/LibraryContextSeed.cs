@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Core.Entities;
-
 namespace Infrastructure.Data
 {
     public class LibraryContextSeed
@@ -42,7 +41,7 @@ namespace Infrastructure.Data
 
                 await context.SaveChangesAsync();
             }
-           if (!context.Author.Any())
+            if (!context.Author.Any())
             {
                 var authorData = File.ReadAllText("../Infrastructure/Data/SeedData/author.json");
                 var author = JsonSerializer.Deserialize<List<Author>>(authorData);
@@ -54,7 +53,30 @@ namespace Infrastructure.Data
 
                 await context.SaveChangesAsync();
             }
+            if (!context.Users.Any())
+            {
+                var userData = File.ReadAllText("../Infrastructure/Data/SeedData/user.json");
+                var usersDto = JsonSerializer.Deserialize<List<User>>(userData);
 
+                foreach (var userDto in usersDto)
+                {
+                    var user = new User
+                    {
+                        Id = userDto.Id,
+                        FirstName = userDto.FirstName,
+                        LastName = userDto.LastName,
+                        Email = userDto.Email,
+                        Password = userDto.Password,
+                        PhoneNumber = userDto.PhoneNumber,
+                        DateOfBirth = userDto.DateOfBirth.UtcDateTime, // Convert to UTC
+                        Role = userDto.Role
+                    };
+
+                    context.Users.Add(user);
+                }
+
+                await context.SaveChangesAsync();
+            }
 
             if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
 
