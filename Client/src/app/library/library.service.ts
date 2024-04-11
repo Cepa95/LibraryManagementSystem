@@ -35,5 +35,9 @@ export class LibraryService {
     return this.http.get<Category[]>(this.baseUrl + 'category');
   }
 
+  getBook(id: number) {
+    return this.http.get<Book>(this.baseUrl + 'book/' + id);
+  }
+
   
 }

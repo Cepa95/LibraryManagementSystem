@@ -4,8 +4,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
-import { HttpClientModule } from '@angular/common/http';
-import { LibraryModule } from './library/library.module';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HomeModule } from './home/home.module';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 
 
 
@@ -20,10 +21,12 @@ import { LibraryModule } from './library/library.module';
     BrowserAnimationsModule,
     CoreModule,
     HttpClientModule,
-    LibraryModule
+    HomeModule
   
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
