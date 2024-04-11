@@ -14,6 +14,7 @@ namespace API.Controllers
         private readonly IGenericRepository<Book> _bookRepository;
         private readonly ILogger<BookController> _logger;
         private readonly IMapper _mapper;
+
         private readonly IUnitOfWork _unitOfWork;
 
         public BookController(IGenericRepository<Book> bookRepository,

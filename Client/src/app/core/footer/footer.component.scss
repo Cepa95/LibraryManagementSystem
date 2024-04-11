@@ -1,0 +1,49 @@
+.social-wrapper {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    justify-content: center;
+    margin-bottom: 1rem;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.social-links img {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: all 0.2s ease-in-out;
+    align-items: center;
+}
+
+.social-links img:hover {
+    transform: scale(1.1);
+}
+
+.social-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style-type: none;
+}
+
+.footer {
+    bottom: 0;
+    background-color:#3c4454;
+    width: 100%;
+    min-width: 20rem;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.p {
+    color:white;
+}

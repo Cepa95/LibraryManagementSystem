@@ -22,6 +22,7 @@ namespace API.Helpers
 
             CreateMap<UserUpdateDto,User>().ReverseMap();
 
+
              CreateMap<Loan, LoanDto>()
                 .ForMember(d => d.User, o => o.MapFrom(s => s.User.Id))//
                 .ForMember(d => d.Book, o => o.MapFrom(s => s.Book.Title));
@@ -41,6 +42,11 @@ namespace API.Helpers
                 .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.Author));
 
             CreateMap<AuthorBookUpdateDto, AuthorBook>().ReverseMap();
+
+            CreateMap<Category, CategoryDto>().ReverseMap();
+
+            CreateMap<Publisher, PublisherDto>().ReverseMap();
+
         }
 
     }
