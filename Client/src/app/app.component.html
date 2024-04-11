@@ -1,7 +1,15 @@
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color = "#ffa500"
+  type="square-loader"
+  [fullScreen]="true"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
+
 <app-nav-bar></app-nav-bar>
 <div class="container" style="margin-top: 50px">
-  <!-- <app-library></app-library> -->
-  <router-outlet></router-outlet> <!-- This is where the LoginComponent or any other routed component will be rendered -->
+  <router-outlet></router-outlet>
 </div>
 <app-footer></app-footer>
 
