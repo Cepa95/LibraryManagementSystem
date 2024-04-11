@@ -1,0 +1,24 @@
+<div class="container my-5" *ngIf="book">
+    <div class="row">
+      <div class="col-lg-6 text-center">
+        <img
+          src="{{ book.imageUrl }}"
+          alt="{{ book.title }}"
+          class="img-fluid smaller-image"
+        />
+      </div>
+      <div class="col-lg-6 mt-5">
+        <h1 class="mb-3"> {{book.title}}</h1>
+        <p class="fs-5 mb-4"> Category: {{ book.category}}</p>
+        <p class="fs-5 mb-4">Publisher: {{ book.publisher}}</p>
+        <p class="fs-5 mb-4"> Pages: {{ book.pages }}</p>
+        <p class="fs-5 mb-4"> Copies: {{ book.numberOfCopies}}</p>
+  <div class="row" *ngIf="book">
+    <hr>
+    <div class="col">
+      <h4 class="fw-bold mb-3">Description</h4>
+      <p>{{ book.description }}</p>
+    </div>
+  </div>
+</div>
+  

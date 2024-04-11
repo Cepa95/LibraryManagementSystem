@@ -3,20 +3,23 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { LibraryComponent } from './library.component';
 import { BookItemComponent } from './book-item/book-item.component';
+import { BookDetailsComponent } from './book-details.component';
+import { RouterModule } from '@angular/router';
+import { LibraryRoutingModule } from './library-routing.module';
 
 
 
 @NgModule({
   declarations: [
     LibraryComponent,
-    BookItemComponent
+    BookItemComponent,
+    BookDetailsComponent
   ],
   imports: [
     CommonModule,
-    SharedModule
-  ],
-  exports: [
-    LibraryComponent
+    SharedModule,
+    LibraryRoutingModule
   ]
+
 })
 export class LibraryModule { }
