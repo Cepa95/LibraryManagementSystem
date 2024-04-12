@@ -11,7 +11,7 @@
   </button>
   <div
     [collapse]="isCollapsed"
-    class="navbar-collapse justify-content-center"
+    class="navbar-collapse"
     id="navbarNav"
   >
     <ul class="navbar-nav">
@@ -46,8 +46,6 @@
     </ul>
   </div>
   <div class="navbar-collapse justify-content-end">
-    <button class="btn btn-outline-light" (click) = "navigateToLoginPage()">Sign in</button>
-
-  </div>
+    <button class="btn btn-outline-light mx-3" (click)="navigateToLoginPage()">Sign in</button>
+</div>
 </nav>
-
