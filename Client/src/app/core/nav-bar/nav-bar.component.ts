@@ -13,7 +13,12 @@ export class NavBarComponent {
 
   navigateToLoginPage() {
     console.log('Navigating to login page');
-    this.router.navigate(['login']);
+    this.router.navigate(['account/login']);
+    console.log(this.router);
+   }
+   navigateToSignUpPage() {
+    console.log('Navigating to register page');
+    this.router.navigate(['account/register']);
     console.log(this.router);
    }
 }
