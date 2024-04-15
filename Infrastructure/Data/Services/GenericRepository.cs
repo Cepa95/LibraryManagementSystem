@@ -1,3 +1,4 @@
+
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -61,14 +62,11 @@ namespace Infrastructure.Data.Services
             _context.Set<T>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
-
-
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
         }
-
-        public int GetNextId()
+                public int GetNextId()
         {
             return _context.Set<T>().Max(t => t.Id) + 1;
         }
