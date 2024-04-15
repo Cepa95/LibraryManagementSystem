@@ -1,0 +1,215 @@
+<div class="container py-5">
+  <form
+    [formGroup]="bookForm"
+    (ngSubmit)="updateBook()"
+    class="card p-4 shadow"
+    style="border-radius: 30px"
+  >
+    <div class="form-group mb-3">
+      <label for="Title" style="color: #d0a933">Title</label>
+      <input
+        id="Title"
+        type="text"
+        formControlName="Title"
+        class="form-control"
+        spellcheck="false"
+        [class.is-invalid]="
+          bookForm.controls['Title'].invalid &&
+          bookForm.controls['Title'].touched
+        "
+        required
+      />
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['Title'].invalid &&
+        (bookForm.controls['Title'].dirty || bookForm.controls['Title'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Title is required.
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="Description" style="color: #d0a933">Description</label>
+      <textarea
+        id="Description"
+        formControlName="Description"
+        class="form-control"
+        spellcheck="false"
+        [class.is-invalid]="
+          bookForm.controls['Description'].invalid &&
+          bookForm.controls['Description'].touched
+        "
+        required
+        rows="8"
+      ></textarea>
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['Description'].invalid &&
+        (bookForm.controls['Description'].dirty ||
+          bookForm.controls['Description'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Description is required.
+    </div>
+    <div class="form-group mb-3">
+      <label for="SearchCriteria" style="color: #d0a933">Search Criteria</label>
+      <input
+        id="SearchCriteria"
+        type="text"
+        formControlName="SearchCriteria"
+        class="form-control"
+        spellcheck="false"
+        [class.is-invalid]="
+          bookForm.controls['SearchCriteria'].invalid &&
+          bookForm.controls['SearchCriteria'].touched
+        "
+        required
+      />
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['SearchCriteria'].invalid &&
+        (bookForm.controls['SearchCriteria'].dirty ||
+          bookForm.controls['SearchCriteria'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Search Criteria is required.
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="Pages" style="color: #d0a933">Pages</label>
+      <input
+        id="Pages"
+        type="number"
+        formControlName="Pages"
+        min="1"
+        class="form-control"
+        spellcheck="false"
+        [class.is-invalid]="
+          bookForm.controls['Pages'].invalid &&
+          bookForm.controls['Pages'].touched
+        "
+        required
+      />
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['Pages'].invalid &&
+        (bookForm.controls['Pages'].dirty || bookForm.controls['Pages'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Pages is required.
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="ImageUrl" style="color: #d0a933">Image URL</label>
+      <input
+        id="ImageUrl"
+        type="text"
+        formControlName="ImageUrl"
+        class="form-control"
+        spellcheck="false"
+        [class.is-invalid]="
+          bookForm.controls['ImageUrl'].invalid &&
+          bookForm.controls['ImageUrl'].touched
+        "
+        required
+      />
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['ImageUrl'].invalid &&
+        (bookForm.controls['ImageUrl'].dirty ||
+          bookForm.controls['ImageUrl'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Image URL is required.
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="NumberOfCopies" style="color: #d0a933"
+        >Number Of Copies</label
+      >
+      <input
+        id="NumberOfCopies"
+        type="number"
+        formControlName="NumberOfCopies"
+        class="form-control"
+        spellcheck="false"
+        min="1"
+        [class.is-invalid]="
+          bookForm.controls['NumberOfCopies'].invalid &&
+          bookForm.controls['NumberOfCopies'].touched
+        "
+        required
+      />
+    </div>
+    <div
+      *ngIf="
+        bookForm.controls['NumberOfCopies'].invalid &&
+        (bookForm.controls['NumberOfCopies'].dirty ||
+          bookForm.controls['NumberOfCopies'].touched)
+      "
+      class="alert alert-danger mt-3"
+    >
+      Number Of Copies is required.
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="PublisherId" style="color: #d0a933">Publisher</label>
+      <select
+        id="PublisherId"
+        formControlName="PublisherId"
+        class="form-control"
+        [class.is-invalid]="
+          bookForm.controls['PublisherId'].invalid &&
+          bookForm.controls['PublisherId'].touched
+        "
+        required
+      >
+        <option *ngFor="let publisher of publishers" [value]="publisher.id">
+          {{ publisher.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="CategoryId" style="color: #d0a933">Category</label>
+      <select
+        id="CategoryId"
+        formControlName="CategoryId"
+        class="form-control"
+        [class.is-invalid]="
+          bookForm.controls['CategoryId'].invalid &&
+          bookForm.controls['CategoryId'].touched
+        "
+        required
+      >
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      {{ error }}
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <button
+        type="submit"
+        class="btn btn-primary mt-3"
+        [disabled]="bookForm.invalid || bookForm.pristine"
+      >
+        Update
+      </button>
+    </div>
+  </form>
+</div>

@@ -31,13 +31,26 @@ export class LibraryService {
     return this.http.get<Publisher[]>(this.baseUrl + 'publisher');
   }
 
-  getCategories() {
-    return this.http.get<Category[]>(this.baseUrl + 'category');
+  updateBook(id: number, book: Book) {
+    return this.http.put(this.baseUrl + 'book/' + id, book);
+  }
+
+  deleteBook(id: number) {
+    return this.http.delete(this.baseUrl + 'book/' + id);
   }
 
   getBook(id: number) {
     return this.http.get<Book>(this.baseUrl + 'book/' + id);
   }
+
+  getBookWithKeys(id: number) {
+    return this.http.get<Book>(this.baseUrl + 'book/keys/' + id);
+  }
+
+  getCategories() {
+    return this.http.get<Category[]>(this.baseUrl + 'category');
+  }
+
 
   
 }

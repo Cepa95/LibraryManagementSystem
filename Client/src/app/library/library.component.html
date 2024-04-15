@@ -45,14 +45,21 @@
             #search
           />
           &nbsp;&nbsp;
-          <button (click)="onSearch(search.value)" class="btn btn-primary mt-2" >Search</button>
+          <button (click)="onSearch(search.value)" class="btn btn-primary mt-2">
+            Search
+          </button>
           &nbsp;
-          <button (click)="onReset()" class="btn btn-warning mt-2">Reset</button>
+          <button (click)="onReset()" class="btn btn-warning mt-2">
+            Reset
+          </button>
         </div>
       </div>
       <div class="row">
         <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
-          <app-book-item [book]="book"></app-book-item>
+          <app-book-item
+            [book]="book"
+            (bookDeleted)="handleBookDeleted($event)"
+          ></app-book-item>
         </div>
       </div>
       <div class="row">

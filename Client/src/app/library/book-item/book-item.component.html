@@ -1,4 +1,8 @@
 <div class="card mb-4 box-shadow" *ngIf="book">
+  <div class="btn-group">
+    <button [routerLink]="['/library/update', book.id]" class="btn btn-primary">Update</button>
+    <button class="btn btn-danger" (click)="openModal(deleteTemplate)">Delete</button>
+  </div>
     <img
       src="{{ book.imageUrl }}"
       alt="{{ book.title }}"
@@ -6,6 +10,7 @@
       style="max-height: 300px; width: auto"
     />
     <div class="card-body">
+    
       <a href="" class="text-decoration-none">
         <h4 class="card-title" style="height: 2.5em; overflow: hidden; text-overflow: ellipsis;">{{ book.title }}</h4>
       </a>
@@ -23,3 +28,10 @@
       </div>
     </div>
 </div>
+<ng-template #deleteTemplate>
+  <div class="modal-body text-center">
+    <p>Are you sure you want to delete book: {{book?.title}}?</p>
+    <button type="button" class="btn btn-danger margin-button" (click)="confirmDelete(book?.id)">Yes</button>
+    <button type="button" class="btn btn-primary margin-button" (click)="modalRef?.hide()">No</button>
+  </div>
+</ng-template>

@@ -47,6 +47,8 @@ namespace API.Helpers
 
             CreateMap<Publisher, PublisherDto>().ReverseMap();
 
+            CreateMap<Book, BookDtoUpdate>().ReverseMap();
+
         }
 
     }

@@ -43,10 +43,10 @@ namespace API.Controllers
 
             var totalItems = await _bookRepository.CountAsync(countSpec);
 
-             var books = await _bookRepository.ListAsync(spec);
+            var books = await _bookRepository.ListAsync(spec);
 
             var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookDto>>(books);
-           
+
 
             return Ok(new Pagination<BookDto>(bookparams.PageIndex, bookparams.PageSize, totalItems, data));
         }
@@ -65,6 +65,21 @@ namespace API.Controllers
 
             return Ok(_mapper.Map<Book, BookDto>(book));
         }
+
+        [HttpGet("keys/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BookDtoUpdate>> GetBookWithForeignKeys(int id)
+        {
+            _logger.LogInformation($"Getting a book under id: {id}");
+
+            var book = await _bookRepository.GetByIdAsync(id);
+
+            if (book == null) return NotFound(new ApiResponse(404, $"Book under id: {id} is not found"));
+
+            return Ok(_mapper.Map<Book, BookDtoUpdate>(book));
+        }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
