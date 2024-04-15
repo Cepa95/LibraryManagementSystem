@@ -58,22 +58,9 @@ namespace API.Controllers
         [HttpPost("register", Name = "Register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> RegisterAsync()
+        public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
         {
             _logger.LogInformation("Registering new user.");
-
-            // Read the request body as a string
-            string requestBody;
-            using (var reader = new StreamReader(Request.Body))
-            {
-                requestBody = await reader.ReadToEndAsync();
-            }
-
-            // Deserialize the JSON string into RegistrationDto
-            var registrationDto = JsonSerializer.Deserialize<RegistrationDto>(requestBody, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true // Ignore case when deserializing
-            });
 
             // Check if the email already exists
             var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
@@ -84,13 +71,14 @@ namespace API.Controllers
 
             // Map DTO to entity and create new user
             var newUser = _mapper.Map<User>(registrationDto);
+            newUser.DateOfBirth = DateTimeOffset.Parse(registrationDto.DateOfBirth).UtcDateTime;
             _unitOfWork.Repository<User>().Add(newUser);
             await _unitOfWork.Complete();
 
             // Return the newly created user
-            return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+            // return CreatedAtAction("GetUserByIdAsync", new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+            return Ok();
         }
-
 
 
         [HttpGet]
