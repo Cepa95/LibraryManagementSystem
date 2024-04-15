@@ -127,6 +127,7 @@ namespace API.Controllers
         //     "PublisherId": 1,
         //     "CategoryId": 1
         // }
+        
 
         [HttpPost]
         public async Task<ActionResult<BookUpdateDto>> CreateBookAsync(BookUpdateDto bookCreateDto)
@@ -135,10 +136,13 @@ namespace API.Controllers
 
             var book = _mapper.Map<Book>(bookCreateDto);
 
+           
+            book.Id = _unitOfWork.Repository<Book>().GetNextId();
+
             _unitOfWork.Repository<Book>().Add(book);
             await _unitOfWork.Complete();
 
-            return Ok(_mapper.Map<BookUpdateDto>(book));
+            return NoContent();
         }
         // {
         //     "Title": "New Book Title",

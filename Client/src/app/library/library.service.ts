@@ -51,6 +51,9 @@ export class LibraryService {
     return this.http.get<Category[]>(this.baseUrl + 'category');
   }
 
+  addBook(book: Book) {
+    return this.http.post(this.baseUrl + 'book', book);
+  }
 
   
 }
