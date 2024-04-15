@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    
+
     public class UserController : BaseApiController
     {
         private readonly IGenericRepository<User> _userRepository;
@@ -27,14 +27,39 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-           [HttpGet]
+        [HttpPost("login",Name="Login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)
+        {
+            _logger.LogInformation($"Logging in user with email: {loginDto.Email}");
+
+            // Find user by email
+            var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
+
+            // Check if user exists
+            if (user == null)
+            {
+                return Unauthorized(new ApiResponse(401, "Invalid email or password."));
+            }
+
+            // Validate password
+            if (user.Password != loginDto.Password)
+            {
+                return Unauthorized(new ApiResponse(401, "Invalid email or password."));
+            }
+
+            // User authenticated successfully
+            return Ok(_mapper.Map<UserDto>(user));
+        }
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IReadOnlyList<UserDto>>> GetUsersAsync()
         {
             _logger.LogInformation("Getting all users");
 
-           
+
             var users = await _userRepository.ListAllAsync();
 
             if (users == null) return NotFound(new ApiResponse(404, "Users are not found"));
@@ -109,5 +134,6 @@ namespace API.Controllers
             await _unitOfWork.Complete();
 
             return Ok(_mapper.Map<UserDto>(user));
-        }}
+        }
+    }
 }
