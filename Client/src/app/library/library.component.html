@@ -27,6 +27,7 @@
         </li>
       </ul>
     </section>
+    
     <section class="col-12 col-md-9 order-2">
       <div class="d-flex justify-content-between align-items-center pb-2">
         <app-count-header
@@ -35,6 +36,7 @@
           [totalCount]="totalCount"
         >
         </app-count-header>
+        <button routerLink="/library/add" class="btn btn-primary">Add New Book</button>
 
         <div class="d-flex mt-2">
           <input
@@ -53,7 +55,10 @@
             Reset
           </button>
         </div>
+    
       </div>
+      
+
       <div class="row">
         <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
           <app-book-item

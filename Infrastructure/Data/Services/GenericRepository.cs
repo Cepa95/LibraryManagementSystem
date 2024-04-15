@@ -67,5 +67,10 @@ namespace Infrastructure.Data.Services
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
         }
+
+        public int GetNextId()
+        {
+            return _context.Set<T>().Max(t => t.Id) + 1;
+        }
     }
 }

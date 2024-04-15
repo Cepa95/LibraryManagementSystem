@@ -37,7 +37,14 @@ namespace Infrastructure.Data
             {
                 var booksData = File.ReadAllText("../Infrastructure/Data/SeedData/book.json");
                 var books = JsonSerializer.Deserialize<List<Book>>(booksData);
-                context.Book.AddRange(books);
+
+                foreach (var book in books)
+                {
+                    if (!context.Book.Any(b => b.Id == book.Id))
+                    {
+                        context.Book.Add(book);
+                    }
+                }
 
                 await context.SaveChangesAsync();
             }

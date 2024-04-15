@@ -9,6 +9,7 @@ import { LibraryRoutingModule } from './library-routing.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { UpdateBookComponent } from './update-book/update-book.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AddBookComponent } from './add-book/add-book.component';
 
 
 
@@ -17,7 +18,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     LibraryComponent,
     BookItemComponent,
     BookDetailsComponent,
-    UpdateBookComponent
+    UpdateBookComponent,
+    AddBookComponent
   ],
   imports: [
     CommonModule,
