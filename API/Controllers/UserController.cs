@@ -1,3 +1,4 @@
+using System.Text.Json;
 using API.Dtos;
 using API.Errors;
 using AutoMapper;
@@ -27,7 +28,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("login",Name="Login")]
+        [HttpPost("login", Name = "Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)
@@ -52,6 +53,46 @@ namespace API.Controllers
             // User authenticated successfully
             return Ok(_mapper.Map<UserDto>(user));
         }
+
+
+        [HttpPost("register", Name = "Register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserDto>> RegisterAsync()
+        {
+            _logger.LogInformation("Registering new user.");
+
+            // Read the request body as a string
+            string requestBody;
+            using (var reader = new StreamReader(Request.Body))
+            {
+                requestBody = await reader.ReadToEndAsync();
+            }
+
+            // Deserialize the JSON string into RegistrationDto
+            var registrationDto = JsonSerializer.Deserialize<RegistrationDto>(requestBody, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true // Ignore case when deserializing
+            });
+
+            // Check if the email already exists
+            var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
+            if (existingUser != null)
+            {
+                return BadRequest(new ApiResponse(400, "Email address already exists."));
+            }
+
+            // Map DTO to entity and create new user
+            var newUser = _mapper.Map<User>(registrationDto);
+            _unitOfWork.Repository<User>().Add(newUser);
+            await _unitOfWork.Complete();
+
+            // Return the newly created user
+            return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+        }
+
+
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]

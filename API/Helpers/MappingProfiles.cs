@@ -14,24 +14,24 @@ namespace API.Helpers
 
             CreateMap<BookUpdateDto, Book>().ReverseMap();
 
-            CreateMap<AuthorDto,Author>().ReverseMap();
+            CreateMap<AuthorDto, Author>().ReverseMap();
 
-            CreateMap<AuthorUpdateDto,Author>().ReverseMap();
-                
-            CreateMap<UserDto,User>().ReverseMap();
+            CreateMap<AuthorUpdateDto, Author>().ReverseMap();
 
-            CreateMap<UserUpdateDto,User>().ReverseMap();
+            CreateMap<UserDto, User>().ReverseMap();
+
+            CreateMap<UserUpdateDto, User>().ReverseMap();
 
 
-             CreateMap<Loan, LoanDto>()
-                .ForMember(d => d.User, o => o.MapFrom(s => s.User.Id))//
-                .ForMember(d => d.Book, o => o.MapFrom(s => s.Book.Title));
+            CreateMap<Loan, LoanDto>()
+               .ForMember(d => d.User, o => o.MapFrom(s => s.User.Id))//
+               .ForMember(d => d.Book, o => o.MapFrom(s => s.Book.Title));
 
-             CreateMap<LoanUpdateDto, Loan>().ReverseMap();
+            CreateMap<LoanUpdateDto, Loan>().ReverseMap();
 
-              CreateMap<LoanUpdateDto, Loan>()
-                .ForMember(dest => dest.User, opt => opt.Ignore()) // Ignore User property during mapping
-                .ForMember(dest => dest.Book, opt => opt.Ignore()); // Ignore Book property during mapping
+            CreateMap<LoanUpdateDto, Loan>()
+              .ForMember(dest => dest.User, opt => opt.Ignore()) // Ignore User property during mapping
+              .ForMember(dest => dest.Book, opt => opt.Ignore()); // Ignore Book property during mapping
 
             CreateMap<AuthorBook, AuthorBookDto>()
                 .ForMember(d => d.BookId, o => o.MapFrom(s => s.Book.Id))
@@ -48,7 +48,9 @@ namespace API.Helpers
             CreateMap<Publisher, PublisherDto>().ReverseMap();
 
             CreateMap<Book, BookDtoUpdate>().ReverseMap();
-
+  
+            CreateMap<RegistrationDto, User>().ReverseMap();
+                        
         }
 
     }
