@@ -6,6 +6,9 @@ import { BookItemComponent } from './book-item/book-item.component';
 import { BookDetailsComponent } from './book-details.component';
 import { RouterModule } from '@angular/router';
 import { LibraryRoutingModule } from './library-routing.module';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { UpdateBookComponent } from './update-book/update-book.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -13,12 +16,15 @@ import { LibraryRoutingModule } from './library-routing.module';
   declarations: [
     LibraryComponent,
     BookItemComponent,
-    BookDetailsComponent
+    BookDetailsComponent,
+    UpdateBookComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    LibraryRoutingModule
+    LibraryRoutingModule,
+    ModalModule.forRoot(),
+    ReactiveFormsModule
   ]
 
 })

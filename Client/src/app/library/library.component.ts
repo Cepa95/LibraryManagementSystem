@@ -29,12 +29,10 @@ export class LibraryComponent implements OnInit {
   totalCount = 0;
   searchUpdated = new Subject<string>();
 
-  
-
   constructor(private libraryService: LibraryService) {
-    this.searchUpdated.pipe(
-      debounceTime(300)
-    ).subscribe(search => this.onSearch(search));
+    this.searchUpdated
+      .pipe(debounceTime(300))
+      .subscribe((search) => this.onSearch(search));
   }
   ngOnInit(): void {
     this.getBooks();
@@ -64,9 +62,9 @@ export class LibraryComponent implements OnInit {
 
   getCategories() {
     this.libraryService.getCategories().subscribe({
-      next: (response) =>
+      next: (response: any) =>
         (this.categories = [{ id: 0, name: 'All' }, ...response]),
-      error: (error) => console.log(error),
+      error: (error: any) => console.log(error),
     });
   }
 
@@ -100,9 +98,14 @@ export class LibraryComponent implements OnInit {
     this.getBooks();
   }
 
-  onReset(){
+  onReset() {
     if (this.searchTerm) this.searchTerm.nativeElement.value = '';
     this.libraryParams = new LibraryParams();
     this.getBooks();
+  }
+
+  handleBookDeleted(id: number) {
+    this.books = this.books.filter((book) => book.id !== id);
+    this.totalCount--;
   }
 }
