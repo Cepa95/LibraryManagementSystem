@@ -7,5 +7,4 @@ export interface User{
     phoneNumber:string;
     dateOfBirth:string;
     role:string;
-    success: boolean;
 }

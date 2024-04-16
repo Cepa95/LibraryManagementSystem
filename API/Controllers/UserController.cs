@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-
+    [Route("api/account")]
     public class UserController : BaseApiController
     {
         private readonly IGenericRepository<User> _userRepository;
@@ -28,7 +28,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("login", Name = "Login")]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)

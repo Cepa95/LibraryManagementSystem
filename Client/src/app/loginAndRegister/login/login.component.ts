@@ -28,16 +28,17 @@ export class LoginComponent {
   login() {
     console.log('Logging in...');
     // Call the login service method with user credentials
-    this.loginAndRegisterService.login(this.userCredentials.email, this.userCredentials.password).subscribe(response => {
-      console.log(response); // Log the response from the service
-      // Navigate to the appropriate page based on the response
-      if (response.success) {
-        // If login is successful, navigate to home or dashboard page
-        this.router.navigate(['/library']); // Replace 'home' with the desired route
-      } else {
-        // If login is unsuccessful, display an error message to the user
+    this.loginAndRegisterService.login(this.userCredentials.email, this.userCredentials.password).subscribe(
+      () => {
+        console.log('Login successful');
+        // Navigate to the appropriate page after successful login
+        this.router.navigate(['library']); // Replace 'library' with the desired route
+      },
+      (error) => {
+        console.error('Login failed:', error);
+        // Display an error message to the user
         alert('Login failed. Please check your credentials and try again.');
       }
-    });
+    );
   }
 }
