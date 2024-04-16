@@ -12,7 +12,7 @@ export class RegisterComponent implements OnInit {
   constructor(private router: Router) { }
   navigateToSignInPage() {
     console.log('Navigating to login page');
-    this.router.navigate(['login']);
+    this.router.navigate(['/account/login']);
     console.log(this.router);
   }
   ngOnInit() {

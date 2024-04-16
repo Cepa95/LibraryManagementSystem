@@ -12,14 +12,14 @@ export class LoginAndRegisterService {
   constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}user`);
+    return this.http.get<User[]>(`${this.baseUrl}account`);
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}user/login`, { email, password });
+    return this.http.post<User>(`${this.baseUrl}account/login`, { email, password });
   }
 
   register(user: User): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}user/register`, user);
+    return this.http.post<User>(`${this.baseUrl}account/register`, user);
   }
 }

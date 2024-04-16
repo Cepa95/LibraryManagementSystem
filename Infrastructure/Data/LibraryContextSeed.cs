@@ -60,30 +60,30 @@ namespace Infrastructure.Data
 
                 await context.SaveChangesAsync();
             }
-            // if (!context.Users.Any())
-            // {
-            //     var userData = File.ReadAllText("../Infrastructure/Data/SeedData/user.json");
-            //     var usersDto = JsonSerializer.Deserialize<List<User>>(userData);
+            if (!context.Users.Any())
+            {
+                var userData = File.ReadAllText("../Infrastructure/Data/SeedData/user.json");
+                var usersDto = JsonSerializer.Deserialize<List<User>>(userData);
 
-            //     foreach (var userDto in usersDto)
-            //     {
-            //         var user = new User
-            //         {
-            //             Id = userDto.Id,
-            //             FirstName = userDto.FirstName,
-            //             LastName = userDto.LastName,
-            //             Email = userDto.Email,
-            //             Password = userDto.Password,
-            //             PhoneNumber = userDto.PhoneNumber,
-            //             DateOfBirth = userDto.DateOfBirth.UtcDateTime, // Convert to UTC
-            //             Role = userDto.Role
-            //         };
+                foreach (var userDto in usersDto)
+                {
+                    var user = new User
+                    {
+                        Id = userDto.Id,
+                        FirstName = userDto.FirstName,
+                        LastName = userDto.LastName,
+                        Email = userDto.Email,
+                        Password = userDto.Password,
+                        PhoneNumber = userDto.PhoneNumber,
+                        DateOfBirth = userDto.DateOfBirth.UtcDateTime, // Convert to UTC
+                        Role = userDto.Role
+                    };
 
-            //         context.Users.Add(user);
-            //     }
+                    context.Users.Add(user);
+                }
 
-            //     await context.SaveChangesAsync();
-            // }
+                await context.SaveChangesAsync();
+            }
 
             if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
 

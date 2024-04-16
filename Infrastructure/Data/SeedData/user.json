@@ -4,7 +4,7 @@
         "FirstName":"Ivan",
         "LastName":"Ivic",
         "Email":"iivic@gmail.com",
-        "Password":"123",
+        "Password":"qwe123",
         "PhoneNumber":"123",
         "DateOfBirth":"1995-05-05",
         "Role":"Admin"
@@ -14,7 +14,7 @@
         "FirstName":"Mate",
         "LastName":"Matic",
         "Email":"mmatic@gmail.com",
-        "Password":"123",
+        "Password":"qwe123",
         "PhoneNumber":"123",
         "DateOfBirth":"1995-05-05",
         "Role":"Admin"
@@ -24,7 +24,7 @@
         "FirstName":"Ante",
         "LastName":"Antic",
         "Email":"aantic@gmail.com",
-        "Password":"123",
+        "Password":"qwe123",
         "PhoneNumber":"123",
         "DateOfBirth":"1995-05-05",
         "Role":"User"
@@ -34,7 +34,7 @@
         "FirstName":"Radisa",
         "LastName":"Trajkovic",
         "Email":"rtrajkovic@gmail.com",
-        "Password":"123",
+        "Password":"qwe123",
         "PhoneNumber":"123",
         "DateOfBirth":"1995-05-05",
         "Role":"User"
