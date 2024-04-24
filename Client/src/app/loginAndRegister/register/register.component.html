@@ -1,77 +1,66 @@
-
-
-
-    <div class="form-wrapper">
-        <div class="form-side">
-            <form class="my-form">
-                <div class="login-welcome-row">
-                    <h1>Create your account</h1>
-                </div>
-                <div class="text-field">
-                    <label for="email">Email:
-                        <input type="email" id="email" name="email" autocomplete="off" placeholder="Your Email"
-                            required>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
-                            <path d="M16 12v1.5a2.5 2.5 0 0 0 5 0v-1.5a9 9 0 1 0 -5.5 8.28"></path>
-                        </svg>
-                    </label>
-                </div>
-                <div class="text-field">
-                    <label for="password">Password:
-                        <input id="password" type="password" name="password" placeholder="Your Password" title="Minimum 6 characters at 
-                                                        least 1 Alphabet and 1 Number"
-                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z">
-                            </path>
-                            <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path>
-                            <path d="M8 11v-4a4 4 0 1 1 8 0v4"></path>
-                        </svg>
-                    </label>
-                </div>
-                <div class="text-field">
-                    <label for="confirm-password">Repeat Password:
-                        <input id="confirm-password" type="password" name="password" placeholder="Repeat Password"
-                            title="Minimum 6 characters at east 1 Alphabet and 1 Number"
-                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z">
-                            </path>
-                            <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path>
-                            <path d="M8 11v-4a4 4 0 1 1 8 0v4"></path>
-                        </svg>
-                    </label>
-                </div>
-                <button class="my-form__button" type="submit">
-                    Sign up
-                </button>
-                <div class="my-form__actions">
-                    <div class="my-form__signup">
-                      <a
-                      routerLink="/account/login"
-                      title="Log in"
-                      >Log in</a
-                    >
-                    </div>
-                </div>
-            </form>
+<div class="form-wrapper">
+    <div class="form-side">
+      <form class="my-form" (ngSubmit)="submitForm()" [formGroup]="form">
+        <div class="login-welcome-row">
+          <h1>Create your account</h1>
         </div>
-        <div class="info-side">
-            <img src="assets/OIP.jpg"/>
-            <div class="welcome-message">
-                <h2>LibraryManagementSystem</h2>
-
-            </div>
+        <div class="text-field">
+          <label for="firstName">First Name:
+            <input type="text" id="firstName" formControlName="firstName" autocomplete="off" placeholder="Your First Name" required>
+          </label>
         </div>
-    </div> 
-
+        <div class="text-field">
+          <label for="lastName">Last Name:
+            <input type="text" id="lastName" formControlName="lastName" autocomplete="off" placeholder="Your Last Name" required>
+          </label>
+        </div>
+        <div class="text-field">
+          <label for="email">Email:
+            <input type="email" id="email" formControlName="email" autocomplete="off" placeholder="Your Email" required>
+          </label>
+        </div>
+        <div class="text-field">
+          <label for="password">Password:
+            <input id="password" type="password" formControlName="password" placeholder="Your Password" title="Minimum 6 characters, at least 1 Alphabet and 1 Number" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
+          </label>
+          <div *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)">
+            <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
+            <div *ngIf="form.get('password')?.errors?.['pattern']">Password must contain at least 6 characters, 1 alphabet, and 1 number</div>
+          </div>
+        </div>
+        <div class="text-field">
+          <label for="confirm-password">Repeat Password:
+            <input id="confirm-password" type="password" formControlName="confirmPassword" placeholder="Repeat Password" required>
+          </label>
+          <div *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">
+            <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirmation Password is required</div>
+            <div *ngIf="form.get('confirmPassword')?.errors?.['notSame']">Passwords do not match</div>
+          </div>
+        </div>
+        <div class="text-field">
+          <label for="phoneNumber">Phone Number:
+            <input type="tel" id="phoneNumber" formControlName="phoneNumber" autocomplete="off" placeholder="Your Phone Number" required>
+          </label>
+        </div>
+        <div class="text-field">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" formControlName="dob" required>
+        </div>
+        <button class="my-form__button" type="submit">
+          Sign up
+        </button>
+        <div class="my-form__actions">
+          <div class="my-form__signup">
+            <a routerLink="/account/login" title="Log in">Log in</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="info-side">
+      <img src="assets/OIP.jpg"/>
+      <div class="welcome-message">
+        <h2>LibraryManagementSystem</h2>
+      </div>
+    </div>
+  </div>
+  
