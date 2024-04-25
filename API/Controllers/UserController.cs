@@ -55,7 +55,7 @@ namespace API.Controllers
         }
 
 
-        [HttpPost("register", Name = "Register")]
+        [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
@@ -71,7 +71,7 @@ namespace API.Controllers
 
             // Map DTO to entity and create new user
             var newUser = _mapper.Map<User>(registrationDto);
-            newUser.DateOfBirth = DateTimeOffset.Parse(registrationDto.DateOfBirth).UtcDateTime;
+            newUser.DateOfBirth = registrationDto.DateOfBirth;
             _unitOfWork.Repository<User>().Add(newUser);
             await _unitOfWork.Complete();
 
