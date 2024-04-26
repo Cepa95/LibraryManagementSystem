@@ -132,27 +132,27 @@ namespace API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-public async Task<ActionResult<UserDto>> UpdateUserAsync(int id, UserUpdateDto userUpdateDto)
-{
-    _logger.LogInformation($"Updating a user under id: {id}");
+        public async Task<ActionResult<UserDto>> UpdateUserAsync(int id, UserUpdateDto userUpdateDto)
+        {
+            _logger.LogInformation($"Updating a user under id: {id}");
 
-    var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+            var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
 
-    if (user == null) 
-    {
-        return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
-    }
+            if (user == null)
+            {
+                return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
+            }
 
-    _mapper.Map(userUpdateDto, user);
+            _mapper.Map(userUpdateDto, user);
 
-    // Convert DateTimeOffset properties to UTC
-    user.DateOfBirth = user.DateOfBirth.ToUniversalTime();
+            // Convert DateTimeOffset properties to UTC
+            user.DateOfBirth = user.DateOfBirth.ToUniversalTime();
 
-    _unitOfWork.Repository<User>().Update(user);
-    await _unitOfWork.Complete();
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.Complete();
 
-    return Ok(_mapper.Map<UserDto>(user));
-}
+            return Ok(_mapper.Map<UserDto>(user));
+        }
         // {
 
         // }
