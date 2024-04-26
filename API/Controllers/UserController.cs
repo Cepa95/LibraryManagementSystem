@@ -71,7 +71,6 @@ namespace API.Controllers
 
             // Map DTO to entity and create new user
             var newUser = _mapper.Map<User>(registrationDto);
-            newUser.DateOfBirth = registrationDto.DateOfBirth;
             _unitOfWork.Repository<User>().Add(newUser);
             await _unitOfWork.Complete();
 
@@ -152,17 +151,39 @@ namespace API.Controllers
 
         // }
 
-        [HttpPost]
-        public async Task<ActionResult<UserDto>> CreateAuthorAsync(UserDto userCreateDto)
+[HttpPost("create")]
+public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
+{
+    _logger.LogInformation("Creating a new user");
+
+    var user = _mapper.Map<User>(userCreateDto);
+
+    // Parse the string representation of DateOfBirth into a DateTimeOffset object
+    if (DateTimeOffset.TryParse(userCreateDto.DateOfBirth, out DateTimeOffset dateOfBirth))
+    {
+        // Ensure the DateTimeOffset value has an offset of 0 (UTC)
+        user.DateOfBirth = dateOfBirth.ToOffset(TimeSpan.Zero);
+    }
+    else
+    {
+        // Handle parsing error, e.g., return a BadRequest
+        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
+    }
+
+    _unitOfWork.Repository<User>().Add(user);
+    await _unitOfWork.Complete();
+
+    // Return the newly created user with a CreatedAtRoute response
+    return CreatedAtAction(nameof(GetUserByIdAsync),new { id = user.Id }, _mapper.Map<UserDto>(user));
+}
+
+
+        // Helper method to validate DateOfBirth format
+        private bool IsValidDateOfBirth(string dateOfBirth)
         {
-            _logger.LogInformation("Creating a new user");
-
-            var user = _mapper.Map<User>(userCreateDto);
-
-            _unitOfWork.Repository<User>().Add(user);
-            await _unitOfWork.Complete();
-
-            return Ok(_mapper.Map<UserDto>(user));
+            DateTimeOffset result;
+            return DateTimeOffset.TryParse(dateOfBirth, out result);
         }
+
     }
 }
