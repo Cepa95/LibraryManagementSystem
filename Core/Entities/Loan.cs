@@ -2,9 +2,9 @@ namespace Core.Entities
 {
     public class Loan : BaseEntity
     {
-        public DateTime BorrowedDate { get; set; }
+        public DateTimeOffset BorrowedDate { get; set; }
 
-        public DateTime? ReturnedDate { get; set; }
+        public DateTimeOffset ReturnedDate { get; set; }
 
         public int NumberOfBorrowedBooks { get; set; }
 
@@ -15,6 +15,6 @@ namespace Core.Entities
         public Book Book { get; set; }
         
         public int BookId { get; set; }
-        
-    }
+     
+}
 }

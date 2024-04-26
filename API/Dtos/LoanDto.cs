@@ -4,14 +4,14 @@ namespace API.Dtos
     {
         public int Id { get; set; }
 
-        public DateTime BorrowedDate { get; set; }
+        public DateTimeOffset BorrowedDate { get; set; }
 
-        public DateTime ReturnedDate { get; set; }
+        public DateTimeOffset ReturnedDate { get; set; }
 
         public int NumberOfBorrowedBooks { get; set; }
 
-        public string User { get; set; }
+        public int User { get; set; }
 
-        public string Book { get; set; }
+        public int Book { get; set; }
     }
 }

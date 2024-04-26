@@ -2,10 +2,9 @@ namespace API.Dtos
 {
     public class LoanUpdateDto
     {
+        public DateTimeOffset BorrowedDate { get; set; }
 
-        public DateTime BorrowedDate { get; set; }
-
-        public DateTime ReturnedDate { get; set; }
+        public DateTimeOffset ReturnedDate { get; set; }
 
         public int NumberOfBorrowedBooks { get; set; }
 
