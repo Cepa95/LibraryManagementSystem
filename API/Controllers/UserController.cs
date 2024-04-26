@@ -132,50 +132,56 @@ namespace API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> UpdateUserAsync(int id, UserUpdateDto userUpdateDto)
-        {
-            _logger.LogInformation($"Updating a user under id: {id}");
+public async Task<ActionResult<UserDto>> UpdateUserAsync(int id, UserUpdateDto userUpdateDto)
+{
+    _logger.LogInformation($"Updating a user under id: {id}");
 
-            var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+    var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
 
-            if (user == null) return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
+    if (user == null) 
+    {
+        return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
+    }
 
-            _mapper.Map(userUpdateDto, user);
+    _mapper.Map(userUpdateDto, user);
 
-            _unitOfWork.Repository<User>().Update(user);
-            await _unitOfWork.Complete();
+    // Convert DateTimeOffset properties to UTC
+    user.DateOfBirth = user.DateOfBirth.ToUniversalTime();
 
-            return Ok(_mapper.Map<UserDto>(user));
-        }
+    _unitOfWork.Repository<User>().Update(user);
+    await _unitOfWork.Complete();
+
+    return Ok(_mapper.Map<UserDto>(user));
+}
         // {
 
         // }
 
-[HttpPost("create")]
-public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
-{
-    _logger.LogInformation("Creating a new user");
+        [HttpPost("create")]
+        public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
+        {
+            _logger.LogInformation("Creating a new user");
 
-    var user = _mapper.Map<User>(userCreateDto);
+            var user = _mapper.Map<User>(userCreateDto);
 
-    // Parse the string representation of DateOfBirth into a DateTimeOffset object
-    if (DateTimeOffset.TryParse(userCreateDto.DateOfBirth, out DateTimeOffset dateOfBirth))
-    {
-        // Ensure the DateTimeOffset value has an offset of 0 (UTC)
-        user.DateOfBirth = dateOfBirth.ToOffset(TimeSpan.Zero);
-    }
-    else
-    {
-        // Handle parsing error, e.g., return a BadRequest
-        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
-    }
+            // Parse the string representation of DateOfBirth into a DateTimeOffset object
+            if (DateTimeOffset.TryParse(userCreateDto.DateOfBirth, out DateTimeOffset dateOfBirth))
+            {
+                // Ensure the DateTimeOffset value has an offset of 0 (UTC)
+                user.DateOfBirth = dateOfBirth.ToOffset(TimeSpan.Zero);
+            }
+            else
+            {
+                // Handle parsing error, e.g., return a BadRequest
+                return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
+            }
 
-    _unitOfWork.Repository<User>().Add(user);
-    await _unitOfWork.Complete();
+            _unitOfWork.Repository<User>().Add(user);
+            await _unitOfWork.Complete();
 
-    // Return the newly created user with a CreatedAtRoute response
-    return CreatedAtAction(nameof(GetUserByIdAsync),new { id = user.Id }, _mapper.Map<UserDto>(user));
-}
+            // Return the newly created user with a CreatedAtRoute response
+            return CreatedAtAction(nameof(GetUserByIdAsync), new { id = user.Id }, _mapper.Map<UserDto>(user));
+        }
 
 
         // Helper method to validate DateOfBirth format
