@@ -1,0 +1,47 @@
+[
+    {
+    "Id":1,
+    "BorrowedDate":"2024-02-12",
+    "ReturnedDate":"2024-03-12",
+    "NumberOfBorrowedBooks":2,
+    "UserId":1,
+    "BookId":7
+    },
+
+    {
+    "Id":2,
+    "BorrowedDate":"2024-02-12",
+    "ReturnedDate":"2024-03-12",
+    "NumberOfBorrowedBooks":2,
+    "UserId":1,
+    "BookId":6
+    },
+
+    {
+    "Id":3,
+    "BorrowedDate":"2024-03-03",
+    "ReturnedDate":"2024-04-03",
+    "NumberOfBorrowedBooks":1,
+    "UserId":2,
+    "BookId":2
+    },
+
+    {
+    "Id":4,
+    "BorrowedDate":"2023-11-12",
+    "ReturnedDate":"2023-12-12",
+    "NumberOfBorrowedBooks":1,
+    "UserId":3,
+    "BookId":8
+    },
+
+    {
+    "Id":5,
+    "BorrowedDate":"2023-10-09",
+    "ReturnedDate":"2023-11-09",
+    "NumberOfBorrowedBooks":1,
+    "UserId":4,
+    "BookId":5
+    }
+
+]

@@ -85,6 +85,52 @@ namespace Infrastructure.Data
             //     await context.SaveChangesAsync();
             // }
 
+
+
+            if (!context.Loan.Any())
+            {
+                var loanData = File.ReadAllText("../Infrastructure/Data/SeedData/loan.json");
+                var loansDto = JsonSerializer.Deserialize<List<Loan>>(loanData);
+
+                foreach (var loanDto in loansDto)
+                {
+                    var loan = new Loan
+                    {
+                        Id = loanDto.Id,
+                        BorrowedDate=loanDto.BorrowedDate.UtcDateTime,
+                        ReturnedDate = loanDto.ReturnedDate.UtcDateTime, // Convert to UTC
+                        NumberOfBorrowedBooks=loanDto.NumberOfBorrowedBooks,
+                        UserId = loanDto.UserId,
+                        BookId=loanDto.BookId
+                    };
+
+                    context.Loan.Add(loan);
+                }
+
+                await context.SaveChangesAsync();
+            }
+
+              if (!context.AuthorBook.Any())
+              {
+                var authorBookData = File.ReadAllText("../Infrastructure/Data/SeedData/authorBook.json");
+                var AuthorBooksDto = JsonSerializer.Deserialize<List<AuthorBook>>(authorBookData);
+
+                foreach (var authorBookDto in AuthorBooksDto)
+                {
+                    var authorBook = new AuthorBook
+                    {
+                        BookId=authorBookDto.BookId,
+                        AuthorId = authorBookDto.AuthorId
+                    };
+
+                    context.AuthorBook.Add(authorBook);
+                }
+
+                await context.SaveChangesAsync();
+            }
+
+
+
             if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
 
 

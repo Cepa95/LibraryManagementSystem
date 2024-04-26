@@ -10,7 +10,7 @@ namespace Infrastructure.Data.config
         {
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.BorrowedDate).IsRequired();
-            builder.Property(p => p.ReturnedDate).IsRequired(false);
+            builder.Property(p => p.ReturnedDate).IsRequired();
             builder.Property(p => p.NumberOfBorrowedBooks).IsRequired();
             builder.HasOne(u => u.User).WithMany().HasForeignKey(p => p.UserId);
             builder.HasOne(b => b.Book).WithMany().HasForeignKey(p => p.BookId);

@@ -134,8 +134,8 @@ namespace Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BorrowedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ReturnedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    BorrowedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ReturnedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     NumberOfBorrowedBooks = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     BookId = table.Column<int>(type: "integer", nullable: false)
