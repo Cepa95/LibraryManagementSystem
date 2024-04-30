@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using API.Dtos;
 using API.Errors;
@@ -53,7 +54,34 @@ namespace API.Controllers
             // User authenticated successfully
             return Ok(_mapper.Map<UserDto>(user));
         }
+        [HttpGet("check-email-existence")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> CheckEmailExistenceAsync([FromQuery] string email)
+        {
+            try
+            {
+                _logger.LogInformation($"Checking existence of email: {email}");
 
+                // Check if the email already exists
+                var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(email));
+                if (existingUser != null)
+                {
+                    // Email address already exists
+                    return Ok(true);
+                }
+                else
+                {
+                    // Email address does not exist
+                    return Ok(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error checking email existence: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse(500, "Internal server error."));
+            }
+        }
 
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -157,31 +185,30 @@ namespace API.Controllers
 
         // }
 
-        [HttpPost("create")]
-        public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
-        {
-            _logger.LogInformation("Creating a new user");
+[HttpPost("create")]
+public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
+{
+    _logger.LogInformation("Creating a new user");
 
-            var user = _mapper.Map<User>(userCreateDto);
+    var user = _mapper.Map<User>(userCreateDto);
 
-            // Parse the string representation of DateOfBirth into a DateTimeOffset object
-            if (DateTimeOffset.TryParse(userCreateDto.DateOfBirth, out DateTimeOffset dateOfBirth))
-            {
-                // Ensure the DateTimeOffset value has an offset of 0 (UTC)
-                user.DateOfBirth = dateOfBirth.ToOffset(TimeSpan.Zero);
-            }
-            else
-            {
-                // Handle parsing error, e.g., return a BadRequest
-                return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
-            }
+    // Attempt to parse the string representation of DateOfBirth into a DateTimeOffset object
+    if (!DateTimeOffset.TryParseExact(userCreateDto.DateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateOfBirth))
+    {
+        // Handle parsing error, e.g., return a BadRequest
+        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
+    }
 
-            _unitOfWork.Repository<User>().Add(user);
-            await _unitOfWork.Complete();
+    // Set the DateOfBirth property of the user
+    user.DateOfBirth = dateOfBirth;
 
-            // Return the newly created user with a CreatedAtRoute response
-            return CreatedAtAction(nameof(GetUserByIdAsync), new { id = user.Id }, _mapper.Map<UserDto>(user));
-        }
+    _unitOfWork.Repository<User>().Add(user);
+    await _unitOfWork.Complete();
+
+    // Return the newly created user with a CreatedAtRoute response
+    return CreatedAtAction(nameof(GetUserByIdAsync), new { id = user.Id }, _mapper.Map<UserDto>(user));
+}
+
 
 
         // Helper method to validate DateOfBirth format

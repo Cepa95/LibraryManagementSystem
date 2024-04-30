@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginAndRegisterService } from '../login-and-register.service';
 import { formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private loginAndRegisterService: LoginAndRegisterService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.buildForm();
@@ -70,9 +71,33 @@ export class RegisterComponent implements OnInit {
     );
   }
 
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   private createUser() {
     const userData = this.form.value;
-    userData.dob = formatDate(userData.dob, 'yyyy-MM-dd', 'en-US');
+  
+    // Convert the string representation of dob to a Date object
+    const dobDate = new Date(userData.dob);
+  
+    console.log('Date of birth before formatting:', userData.dob);
+    console.log('Type of dobDate:', typeof dobDate);
+    console.log('Value of dobDate:', dobDate);
+  
+    // Format the date object
+    const formattedDob = this.formatDate(dobDate);
+  
+    console.log('Date of birth after formatting:', formattedDob);
+  
+    // Update userData with the formatted date
+    userData.dob = formattedDob;
+  
+    userData.role = 'BasicUser';
+  
     this.loginAndRegisterService.register(userData).subscribe(
       (user) => {
         console.log('User created successfully:', user);
@@ -80,12 +105,13 @@ export class RegisterComponent implements OnInit {
       },
       (error) => {
         console.error('Error creating user:', error);
-        // Handle the error - log it or display an error message to the user
-        // For example, you can display a generic error message on the form
-        // this.form.setErrors({ serverError: true });
+        // Handle the error
       }
     );
   }
+  
+
+
 
   submitForm() {
     if (this.form.valid) {

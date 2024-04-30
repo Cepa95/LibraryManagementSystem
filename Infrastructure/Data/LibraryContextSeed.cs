@@ -61,28 +61,28 @@ namespace Infrastructure.Data
 
                 await context.SaveChangesAsync();
             }
-if (!context.Users.Any())
-{
-    var userData = File.ReadAllText("../Infrastructure/Data/SeedData/user.json");
-    var users = JsonSerializer.Deserialize<List<User>>(userData);
+// if (!context.Users.Any())
+// {
+//     var userData = File.ReadAllText("../Infrastructure/Data/SeedData/user.json");
+//     var users = JsonSerializer.Deserialize<List<User>>(userData);
 
-    foreach (var userDto in users)
-    {
-        var user = new User
-        {
-            Id = userDto.Id,
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            Email = userDto.Email,
-            Password = userDto.Password,
-            PhoneNumber = userDto.PhoneNumber,
-            // Convert DateOfBirth to UTC before assigning
-            DateOfBirth = userDto.DateOfBirth.ToUniversalTime(),
-            Role = userDto.Role
-        };
+//     foreach (var userDto in users)
+//     {
+//         var user = new User
+//         {
+//             Id = userDto.Id,
+//             FirstName = userDto.FirstName,
+//             LastName = userDto.LastName,
+//             Email = userDto.Email,
+//             Password = userDto.Password,
+//             PhoneNumber = userDto.PhoneNumber,
+//             // Convert DateOfBirth to UTC before assigning
+//             DateOfBirth = userDto.DateOfBirth.ToUniversalTime(),
+//             Role = userDto.Role
+//         };
 
-        context.Users.Add(user);
-    }
+//         context.Users.Add(user);
+//     }
 
     await context.SaveChangesAsync();
 }
@@ -92,9 +92,9 @@ if (!context.Users.Any())
 
 
 
-            if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
+        //     if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
 
 
-        }
+        // }
     }
 }

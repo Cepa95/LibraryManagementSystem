@@ -5,6 +5,6 @@ export interface User{
     email:string;
     password:string;
     phoneNumber:string;
-    dateOfBirth:string;
+    dateOfBirth:Date;
     role:string;
 }
