@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/)]],
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', Validators.required],
-      dob: ['', Validators.required]
+      dateOfBirth: ['', Validators.required]
     }, { validator: this.passwordMatchValidator('password', 'confirmPassword') });
   }
 
@@ -82,19 +82,19 @@ export class RegisterComponent implements OnInit {
     const userData = this.form.value;
   
     // Convert the string representation of dob to a Date object
-    const dobDate = new Date(userData.dob);
+    const inputDate = new Date(userData.dateOfBirth);
   
-    console.log('Date of birth before formatting:', userData.dob);
-    console.log('Type of dobDate:', typeof dobDate);
-    console.log('Value of dobDate:', dobDate);
+    console.log('Date of birth before formatting:', userData.dateOfBirth);
+    console.log('Type of dobDate:', typeof inputDate);
+    console.log('Value of dobDate:', inputDate);
   
     // Format the date object
-    const formattedDob = this.formatDate(dobDate);
+    const formattedDate = this.formatDate(inputDate);
   
-    console.log('Date of birth after formatting:', formattedDob);
+    console.log('Date of birth after formatting:', formattedDate);
   
     // Update userData with the formatted date
-    userData.dob = formattedDob;
+    userData.dateOfBirth = formattedDate;
   
     userData.role = 'BasicUser';
   

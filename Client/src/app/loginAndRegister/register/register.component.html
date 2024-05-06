@@ -56,10 +56,10 @@
         </div>
       </div>
       <div class="text-field">
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" formControlName="dob" required>
-        <div *ngIf="form.get('dob')?.invalid && (form.get('dob')?.dirty || form.get('dob')?.touched)">
-          <div *ngIf="form.get('dob')?.errors?.['required']">Date of Birth is required</div>
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" id="dateOfBirth" formControlName="dateOfBirth" required>
+        <div *ngIf="form.get('dateOfBirth')?.invalid && (form.get('dateOfBirth')?.dirty || form.get('dateOfBirth')?.touched)">
+          <div *ngIf="form.get('dateOfBirth')?.errors?.['required']">Date of Birth is required</div>
         </div>
       </div>
       <button class="my-form__button" type="submit">

@@ -84,28 +84,41 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
-        {
-            _logger.LogInformation("Registering new user.");
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
+{
+    _logger.LogInformation("Registering new user.");
 
-            // Check if the email already exists
-            var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
-            if (existingUser != null)
-            {
-                return BadRequest(new ApiResponse(400, "Email address already exists."));
-            }
+    // Check if the email already exists
+    var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
+    if (existingUser != null)
+    {
+        return BadRequest(new ApiResponse(400, "Email address already exists."));
+    }
 
-            // Map DTO to entity and create new user
-            var newUser = _mapper.Map<User>(registrationDto);
-            _unitOfWork.Repository<User>().Add(newUser);
-            await _unitOfWork.Complete();
+    // Convert the string representation of DateOfBirth to a DateTimeOffset object
+    if (!DateTime.TryParseExact(registrationDto.DateOfBirth.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime newDateTime) ||
+        newDateTime.Year < 0 || newDateTime.Year > 10000)
+    {
+        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth or out of range."));
+    }
 
-            // Return the newly created user
-            // return CreatedAtAction("GetUserByIdAsync", new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
-            return Ok();
-        }
+    // Log date values before assignment
+    _logger.LogInformation($"Date of birth before formatting: {registrationDto.DateOfBirth}");
+    _logger.LogInformation($"Date of birth after formatting: {newDateTime}");
+
+    var newUser = _mapper.Map<User>(registrationDto);
+
+    // Convert DateOfBirth to UTC before saving
+    newUser.DateOfBirth = newDateTime.ToUniversalTime();
+
+    _unitOfWork.Repository<User>().Add(newUser);
+    await _unitOfWork.Complete();
+    
+    // Return the newly created user
+    return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+}
 
 
         [HttpGet]
@@ -184,30 +197,6 @@ namespace API.Controllers
         // {
 
         // }
-
-[HttpPost("create")]
-public async Task<ActionResult<UserDto>> CreateUserAsync(UserDto userCreateDto)
-{
-    _logger.LogInformation("Creating a new user");
-
-    var user = _mapper.Map<User>(userCreateDto);
-
-    // Attempt to parse the string representation of DateOfBirth into a DateTimeOffset object
-    if (!DateTimeOffset.TryParseExact(userCreateDto.DateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateOfBirth))
-    {
-        // Handle parsing error, e.g., return a BadRequest
-        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth."));
-    }
-
-    // Set the DateOfBirth property of the user
-    user.DateOfBirth = dateOfBirth;
-
-    _unitOfWork.Repository<User>().Add(user);
-    await _unitOfWork.Complete();
-
-    // Return the newly created user with a CreatedAtRoute response
-    return CreatedAtAction(nameof(GetUserByIdAsync), new { id = user.Id }, _mapper.Map<UserDto>(user));
-}
 
 
 
