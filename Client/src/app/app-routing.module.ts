@@ -8,10 +8,11 @@ import { NotFoundComponent } from './core/not-found/not-found.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'not-found', component: NotFoundComponent },
+
   { path: 'library', loadChildren: () => import('./library/library.module').then(m => m.LibraryModule) },
-  { path: '', component: LibraryComponent },
-  { path: 'account', loadChildren: () => import('./loginAndRegister/login-and-register.module').then(m => m.LoginAndRegisterModule)},
+  { path: 'account', loadChildren: () => import('./loginAndRegister/login-and-register.module').then(m => m.LoginAndRegisterModule) },
+  // { path: '', component: LibraryComponent },
+  { path: 'not-found', component: NotFoundComponent },
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];
 

@@ -1,17 +1,30 @@
-// UserRegistrationDto.cs
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Dtos
 {
     public class RegistrationDto
     {
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public required string Email { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
         // [MinLength(6)] // Add any password requirements you want
-        public required string Password { get; set; }
-        public required string PhoneNumber { get; set; }
-        public required string DateOfBirth { get; set; }
-        public required string Role { get; set; }
+        public string Password { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        public DateTimeOffset DateOfBirth { get; set; }
+
+        [Required]
+        public string Role { get; set; }
     }
 }

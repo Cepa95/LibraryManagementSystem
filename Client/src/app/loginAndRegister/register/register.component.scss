@@ -74,7 +74,7 @@ body {
 
 
 .form-side {
-    padding: 5.25rem 3rem 3rem 2rem;
+    padding: 0.5rem 3rem 3rem 2rem;
     display: flex;
     justify-content: center;
     align-items: start;
@@ -124,11 +124,10 @@ body {
     flex-direction: column;
     justify-content: start;
     position: relative;
-    gap: 1rem;
-    max-width: 28.75rem;
+    max-width:35rem;
     width: 100%;
     padding: 3rem 2rem;
-    height: fit-content;
+    height:max-content;
     box-shadow:
         rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -278,3 +277,29 @@ body {
         padding: 3rem 3rem 3rem 2rem;
     }
 }
+.text-field {
+    margin-bottom: 1rem; /* Add margin between fields */
+}
+
+.text-field:last-child {
+    margin-bottom: 2rem; /* Add larger margin to the last field */
+}
+
+.date-of-birth-fields {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.date-of-birth-fields select {
+    width: 30%; /* Adjust width of select elements */
+}
+.invalid input {
+    border-color: red;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }

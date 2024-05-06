@@ -1,17 +1,4 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Mulish&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="login.component.scss" />
-  </head>
-  <body>
+
     <div class="login-wrapper">
       <div class="login-side">
         <div class="my-form__wrapper">
@@ -19,48 +6,33 @@
             <h1>Welcome</h1>
             <p>Please enter your details!</p>
           </div>
-          <form class="my-form">
+          <form class="my-form" (ngSubmit)="login()">
             <div class="text-field">
               <label for="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Your Email"
-                required
-              />
+              <input type="email" id="email" name="email" placeholder="Your Email" required [(ngModel)]="userCredentials.email" />
               <img alt="Email Icon" title="Email Icon" src="assets/email.svg" />
             </div>
             <div class="text-field">
               <label for="password">Password:</label>
-              <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Your Password"
-                title="Minimum 6 characters at 
-                                    least 1 Alphabet and 1 Number"
-                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-                required
-              />
-              <img
-                alt="Password Icon"
-                title="Password Icon"
-                src="assets/password.svg"
-              />
+              <input id="password" type="password" name="password" placeholder="Your Password" [(ngModel)]="userCredentials.password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" />
+              <img alt="Password Icon" title="Password Icon" src="assets/password.svg" />
             </div>
             <input type="submit" class="my-form__button" value="Login" />
+          </form>
+
             <div class="my-form__actions">
               <div class="my-form__signup">
                 <a
-                  href="register"
+                routerLink="/account/register"
                   title="Create Account"
                   (click)="navigateToSignUpPage()"
                   >Create Account</a
                 >
+
+
               </div>
             </div>
-          </form>
+          
         </div>
       </div>
       <div class="info-side">
@@ -70,5 +42,3 @@
         </div>
       </div>
     </div>
-  </body>
-</html>

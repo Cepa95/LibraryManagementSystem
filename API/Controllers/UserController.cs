@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using API.Dtos;
 using API.Errors;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-
+    [Route("api/account")]
     public class UserController : BaseApiController
     {
         private readonly IGenericRepository<User> _userRepository;
@@ -28,7 +29,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("login", Name = "Login")]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)
@@ -53,32 +54,71 @@ namespace API.Controllers
             // User authenticated successfully
             return Ok(_mapper.Map<UserDto>(user));
         }
-
-
-        [HttpPost("register", Name = "Register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpGet("check-email-existence")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
+        public async Task<ActionResult<bool>> CheckEmailExistenceAsync([FromQuery] string email)
         {
-            _logger.LogInformation("Registering new user.");
-
-            // Check if the email already exists
-            var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
-            if (existingUser != null)
+            try
             {
-                return BadRequest(new ApiResponse(400, "Email address already exists."));
+                _logger.LogInformation($"Checking existence of email: {email}");
+
+                // Check if the email already exists
+                var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(email));
+                if (existingUser != null)
+                {
+                    // Email address already exists
+                    return Ok(true);
+                }
+                else
+                {
+                    // Email address does not exist
+                    return Ok(false);
+                }
             }
-
-            // Map DTO to entity and create new user
-            var newUser = _mapper.Map<User>(registrationDto);
-            newUser.DateOfBirth = DateTimeOffset.Parse(registrationDto.DateOfBirth).UtcDateTime;
-            _unitOfWork.Repository<User>().Add(newUser);
-            await _unitOfWork.Complete();
-
-            // Return the newly created user
-            // return CreatedAtAction("GetUserByIdAsync", new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
-            return Ok();
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error checking email existence: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse(500, "Internal server error."));
+            }
         }
+
+        [HttpPost("register")]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
+{
+    _logger.LogInformation("Registering new user.");
+
+    // Check if the email already exists
+    var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
+    if (existingUser != null)
+    {
+        return BadRequest(new ApiResponse(400, "Email address already exists."));
+    }
+
+    // Convert the string representation of DateOfBirth to a DateTimeOffset object
+    if (!DateTime.TryParseExact(registrationDto.DateOfBirth.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime newDateTime) ||
+        newDateTime.Year < 0 || newDateTime.Year > 10000)
+    {
+        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth or out of range."));
+    }
+
+    // Log date values before assignment
+    _logger.LogInformation($"Date of birth before formatting: {registrationDto.DateOfBirth}");
+    _logger.LogInformation($"Date of birth after formatting: {newDateTime}");
+
+    var newUser = _mapper.Map<User>(registrationDto);
+
+    // Convert DateOfBirth to UTC before saving
+    newUser.DateOfBirth = newDateTime.ToUniversalTime();
+
+    _unitOfWork.Repository<User>().Add(newUser);
+    await _unitOfWork.Complete();
+    
+    // Return the newly created user
+    return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+}
 
 
         [HttpGet]
@@ -139,9 +179,15 @@ namespace API.Controllers
 
             var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
 
-            if (user == null) return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
+            if (user == null)
+            {
+                return NotFound(new ApiResponse(404, $"User under id: {id} is not found"));
+            }
 
             _mapper.Map(userUpdateDto, user);
+
+            // Convert DateTimeOffset properties to UTC
+            user.DateOfBirth = user.DateOfBirth.ToUniversalTime();
 
             _unitOfWork.Repository<User>().Update(user);
             await _unitOfWork.Complete();
@@ -152,17 +198,14 @@ namespace API.Controllers
 
         // }
 
-        [HttpPost]
-        public async Task<ActionResult<UserDto>> CreateAuthorAsync(UserDto userCreateDto)
+
+
+        // Helper method to validate DateOfBirth format
+        private bool IsValidDateOfBirth(string dateOfBirth)
         {
-            _logger.LogInformation("Creating a new user");
-
-            var user = _mapper.Map<User>(userCreateDto);
-
-            _unitOfWork.Repository<User>().Add(user);
-            await _unitOfWork.Complete();
-
-            return Ok(_mapper.Map<UserDto>(user));
+            DateTimeOffset result;
+            return DateTimeOffset.TryParse(dateOfBirth, out result);
         }
+
     }
 }
