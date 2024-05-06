@@ -27,6 +27,7 @@
         <div *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)">
           <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
           <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
+          <div *ngIf="emailExistsError">Email already exists</div>
         </div>
       </div>
       <div class="text-field">

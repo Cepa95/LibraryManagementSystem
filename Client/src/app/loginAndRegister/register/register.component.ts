@@ -48,25 +48,23 @@ export class RegisterComponent implements OnInit {
       }
     };
   }
-
+  emailExistsError: boolean = false;
   private checkEmailExistence(email: string) {
     this.loginAndRegisterService.checkEmailExistence(email).subscribe(
       (exists: boolean) => {
+        
         if (exists) {
           console.log('Email already exists');
-          // Provide feedback to the user
-          // For example, you can display an error message on the form
+          this.emailExistsError = true;
           this.form.get('email')?.setErrors({ emailExists: true });
         } else {
-          // Continue with user creation
+          this.emailExistsError = false;
           this.createUser();
         }
       },
       (error) => {
         console.error('Error checking email existence:', error);
-        // Handle the error - log it or display an error message to the user
-        // For example, you can display a generic error message on the form
-        // this.form.setErrors({ serverError: true });
+        // Handle the error
       }
     );
   }
@@ -81,12 +79,12 @@ export class RegisterComponent implements OnInit {
   private createUser() {
     const userData = this.form.value;
   
-    // Convert the string representation of dob to a Date object
+    // Convert the string representation of date to a Date object
     const inputDate = new Date(userData.dateOfBirth);
   
     console.log('Date of birth before formatting:', userData.dateOfBirth);
-    console.log('Type of dobDate:', typeof inputDate);
-    console.log('Value of dobDate:', inputDate);
+    console.log('Type of Date:', typeof inputDate);
+    console.log('Value of Date:', inputDate);
   
     // Format the date object
     const formattedDate = this.formatDate(inputDate);
@@ -104,6 +102,7 @@ export class RegisterComponent implements OnInit {
         this.navigateToSignInPage();
       },
       (error) => {
+  
         console.error('Error creating user:', error);
         // Handle the error
       }
@@ -121,7 +120,9 @@ export class RegisterComponent implements OnInit {
       }
       this.checkEmailExistence(this.form.get('email')?.value);
     } else {
+      console.error('Registration failed: check input data');
       console.log('Form is invalid');
+      alert('Register failed. Please check your input and try again.');
     }
   }
 
