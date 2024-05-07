@@ -34,26 +34,21 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)
         {
-            _logger.LogInformation($"Logging in user with email: {loginDto.Email}");
-
             // Find user by email
             var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
 
-            // Check if user exists
-            if (user == null)
+            // Check if user exists and password matches
+            if (user != null && user.Password == loginDto.Password)
             {
-                return Unauthorized(new ApiResponse(401, "Invalid email or password."));
+                // User authenticated successfully
+                var userDto = _mapper.Map<UserDto>(user);
+                return Ok(userDto);
             }
 
-            // Validate password
-            if (user.Password != loginDto.Password)
-            {
-                return Unauthorized(new ApiResponse(401, "Invalid email or password."));
-            }
-
-            // User authenticated successfully
-            return Ok(_mapper.Map<UserDto>(user));
+            // Unauthorized: Invalid email or password
+            return Unauthorized(new ApiResponse(401, "Invalid email or password."));
         }
+
         [HttpGet("check-email-existence")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -84,41 +79,41 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-[ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
-{
-    _logger.LogInformation("Registering new user.");
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] RegistrationDto registrationDto)
+        {
+            _logger.LogInformation("Registering new user.");
 
-    // Check if the email already exists
-    var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
-    if (existingUser != null)
-    {
-        return BadRequest(new ApiResponse(400, "Email address already exists."));
-    }
+            // Check if the email already exists
+            var existingUser = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(registrationDto.Email));
+            if (existingUser != null)
+            {
+                return BadRequest(new ApiResponse(400, "Email address already exists."));
+            }
 
-    // Convert the string representation of DateOfBirth to a DateTimeOffset object
-    if (!DateTime.TryParseExact(registrationDto.DateOfBirth.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime newDateTime) ||
-        newDateTime.Year < 0 || newDateTime.Year > 10000)
-    {
-        return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth or out of range."));
-    }
+            // Convert the string representation of DateOfBirth to a DateTimeOffset object
+            if (!DateTime.TryParseExact(registrationDto.DateOfBirth.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime newDateTime) ||
+                newDateTime.Year < 0 || newDateTime.Year > 10000)
+            {
+                return BadRequest(new ApiResponse(400, "Invalid date format for DateOfBirth or out of range."));
+            }
 
-    // Log date values before assignment
-    _logger.LogInformation($"Date of birth before formatting: {registrationDto.DateOfBirth}");
-    _logger.LogInformation($"Date of birth after formatting: {newDateTime}");
+            // Log date values before assignment
+            _logger.LogInformation($"Date of birth before formatting: {registrationDto.DateOfBirth}");
+            _logger.LogInformation($"Date of birth after formatting: {newDateTime}");
 
-    var newUser = _mapper.Map<User>(registrationDto);
+            var newUser = _mapper.Map<User>(registrationDto);
 
-    // Convert DateOfBirth to UTC before saving
-    newUser.DateOfBirth = newDateTime.ToUniversalTime();
+            // Convert DateOfBirth to UTC before saving
+            newUser.DateOfBirth = newDateTime.ToUniversalTime();
 
-    _unitOfWork.Repository<User>().Add(newUser);
-    await _unitOfWork.Complete();
-    
-    // Return the newly created user
-    return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
-}
+            _unitOfWork.Repository<User>().Add(newUser);
+            await _unitOfWork.Complete();
+
+            // Return the newly created user
+            return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUser.Id }, _mapper.Map<UserDto>(newUser));
+        }
 
 
         [HttpGet]

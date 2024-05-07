@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginAndRegisterService } from '../login-and-register.service';
-import { NgModule } from '@angular/core'
+import { AuthService } from '../../core/services/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -11,33 +11,35 @@ import { NgModule } from '@angular/core'
 export class LoginComponent {
   isCollapsed = true;
 
-  // Add a new property to hold user credentials
   userCredentials: any = {
     email: '',
     password: ''
   };
 
-  constructor(private router: Router, private loginAndRegisterService: LoginAndRegisterService) { }
+  constructor(private router: Router, private authService: AuthService) {}
 
   navigateToSignUpPage() {
     console.log('Navigating to register page');
     this.router.navigate(['account/register']);
   }
 
-  // Method to handle login
   login() {
     console.log('Logging in...');
-    // Call the login service method with user credentials
-    this.loginAndRegisterService.login(this.userCredentials.email, this.userCredentials.password).subscribe(
-      () => {
-        console.log('Login successful');
-        // Navigate to the appropriate page after successful login
-        this.router.navigate(['library']); // Replace 'library' with the desired route
+    this.authService.login(this.userCredentials.email, this.userCredentials.password).subscribe(
+      (loggedIn) => {
+        if (loggedIn) {
+          console.log('Login successful');
+          const user = this.authService.currentUser;
+          alert(`Welcome, ${user.firstName} ${user.lastName}!`);
+          this.router.navigate(['library']);
+        } else {
+          console.error('Login failed');
+          alert('Login failed. Please check your credentials and try again.');
+        }
       },
       (error) => {
         console.error('Login failed:', error);
-        // Display an error message to the user
-        alert('Login failed. Please check your credentials and try again.');
+        alert('Login failed. Please try again later.');
       }
     );
   }
