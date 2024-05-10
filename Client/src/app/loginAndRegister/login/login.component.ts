@@ -2,15 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  isCollapsed = true;
-
   userCredentials: any = {
     email: '',
     password: ''
@@ -25,12 +22,14 @@ export class LoginComponent {
 
   login() {
     console.log('Logging in...');
-    this.authService.login(this.userCredentials.email, this.userCredentials.password).subscribe(
-      (loggedIn) => {
-        if (loggedIn) {
+    const { email, password } = this.userCredentials; // Destructure email and password from userCredentials
+    this.authService.login(email, password).subscribe(
+      (token) => {
+        if (token) {
           console.log('Login successful');
-          const user = this.authService.currentUser;
-          alert(`Welcome, ${user.firstName} ${user.lastName}!`);
+          // Store the token in local storage or a cookie if needed
+          localStorage.setItem('token', token);
+          // Redirect to the desired page after successful login
           this.router.navigate(['library']);
         } else {
           console.error('Login failed');
@@ -43,4 +42,5 @@ export class LoginComponent {
       }
     );
   }
+  
 }

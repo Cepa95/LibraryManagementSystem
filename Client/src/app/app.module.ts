@@ -23,7 +23,8 @@ import { LoginAndRegisterModule } from './loginAndRegister/login-and-register.mo
     HttpClientModule,
     LibraryModule,
     LoginAndRegisterModule,
-    HomeModule
+    HomeModule,
+    HttpClientModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
