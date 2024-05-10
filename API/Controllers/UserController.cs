@@ -1,4 +1,7 @@
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using API.Dtos;
 using API.Errors;
@@ -7,7 +10,9 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
 {
@@ -18,21 +23,40 @@ namespace API.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
         public UserController(IGenericRepository<User> userRepository,
                               ILogger<UserController> logger,
                               IUnitOfWork unitOfWork,
-                              IMapper mapper)
+                              IMapper mapper,
+                              IConfiguration configuration)
         {
             _userRepository = userRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _configuration = configuration;
+        }
+
+        [HttpGet("admin-action")]
+        [Authorize(Roles = "Admin")] // Restrict access to users with the "Admin" role
+        public IActionResult AdminAction()
+        {
+            // Only admins can access this action
+            return Ok("Admin action performed successfully.");
+        }
+
+        [HttpGet("user-action")]
+        [Authorize]
+        public IActionResult UserAction()
+        {
+            // Any authenticated user can access this action
+            return Ok("User action performed successfully.");
         }
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginDto loginDto)
+        public async Task<ActionResult<string>> LoginAsync([FromBody] LoginDto loginDto)
         {
             // Find user by email
             var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
@@ -41,13 +65,61 @@ namespace API.Controllers
             if (user != null && user.Password == loginDto.Password)
             {
                 // User authenticated successfully
-                var userDto = _mapper.Map<UserDto>(user);
-                return Ok(userDto);
+
+                // Create claims for the JWT token
+                var claims = new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // User ID
+            new Claim(ClaimTypes.Email, user.Email), // User email
+            new Claim(ClaimTypes.Role, user.Role), // User role
+            // Add more claims as needed
+        };
+
+                // Create JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]); // Use your secret key
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.UtcNow.AddDays(7), // Token expiration time
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+
+                // Return the JWT token to the client
+                return Ok(tokenString);
             }
 
             // Unauthorized: Invalid email or password
             return Unauthorized(new ApiResponse(401, "Invalid email or password."));
         }
+
+        [HttpPost("logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [Authorize] // Only authenticated users can log out
+        public ActionResult Logout()
+        {
+            try
+            {
+                // Invalidate the JWT token (optional, depending on your token handling mechanism)
+                // You might want to add additional logic here to clear session data, etc.
+
+                // Log the user out by removing any session-related data (e.g., user claims, session tokens, etc.)
+
+                // Optionally, perform any cleanup or logging
+
+                return Ok(new ApiResponse(200, "Logout successful."));
+            }
+            catch (Exception ex)
+            {
+                // Log any errors that occur during logout process
+                _logger.LogError($"Error during logout: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse(500, "An error occurred during logout."));
+            }
+        }
+
 
         [HttpGet("check-email-existence")]
         [ProducesResponseType(StatusCodes.Status200OK)]
