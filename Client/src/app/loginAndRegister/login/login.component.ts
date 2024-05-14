@@ -20,21 +20,14 @@ export class LoginComponent {
     this.router.navigate(['account/register']);
   }
 
+
   login() {
     console.log('Logging in...');
-    const { email, password } = this.userCredentials; // Destructure email and password from userCredentials
+    const { email, password } = this.userCredentials;
     this.authService.login(email, password).subscribe(
-      (token) => {
-        if (token) {
-          console.log('Login successful');
-          // Store the token in local storage or a cookie if needed
-          localStorage.setItem('token', token);
-          // Redirect to the desired page after successful login
-          this.router.navigate(['library']);
-        } else {
-          console.error('Login failed');
-          alert('Login failed. Please check your credentials and try again.');
-        }
+      () => {
+        console.log('Login successful');
+        this.router.navigate(['library']);
       },
       (error) => {
         console.error('Login failed:', error);
@@ -42,5 +35,5 @@ export class LoginComponent {
       }
     );
   }
-  
 }
+

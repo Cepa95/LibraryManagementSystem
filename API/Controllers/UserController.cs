@@ -53,47 +53,48 @@ namespace API.Controllers
             return Ok("User action performed successfully.");
         }
 
-        [HttpPost("login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<string>> LoginAsync([FromBody] LoginDto loginDto)
+[HttpPost("login")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<object>> LoginAsync([FromBody] LoginDto loginDto)
+{
+    // Find user by email
+    var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
+
+    // Check if user exists and password matches
+    if (user != null && user.Password == loginDto.Password)
+    {
+        // User authenticated successfully
+
+        // Create claims for the JWT token
+        var claims = new[]
         {
-            // Find user by email
-            var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
-
-            // Check if user exists and password matches
-            if (user != null && user.Password == loginDto.Password)
-            {
-                // User authenticated successfully
-
-                // Create claims for the JWT token
-                var claims = new[]
-                {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // User ID
             new Claim(ClaimTypes.Email, user.Email), // User email
             new Claim(ClaimTypes.Role, user.Role), // User role
             // Add more claims as needed
         };
 
-                // Create JWT token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]); // Use your secret key
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddDays(7), // Token expiration time
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandler.WriteToken(token);
+        // Create JWT token
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]); // Use your secret key
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddDays(7), // Token expiration time
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
 
-                // Return the JWT token to the client
-                return Ok(tokenString);
-            }
+        // Return the JWT token to the client as part of a JSON object
+        return Ok(new { Token = tokenString });
+    }
 
-            // Unauthorized: Invalid email or password
-            return Unauthorized(new ApiResponse(401, "Invalid email or password."));
-        }
+    // Unauthorized: Invalid email or password
+    return Unauthorized(new ApiResponse(401, "Invalid email or password."));
+}
+
 
         [HttpPost("logout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
