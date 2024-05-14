@@ -1,11 +1,10 @@
+using System.Text;
 using API.Extensions;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +15,9 @@ builder.Services.AddMvc(options =>
     options.SuppressAsyncSuffixInActionNames = false;
 });
 builder.Services.AddApplicationServices(builder.Configuration);
+
+// Add session configuration
+builder.Services.AddSession();
 
 // Configure JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,6 +55,9 @@ app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Use session middleware
+app.UseSession();
 
 // Database migration and seeding
 using var scope = app.Services.CreateScope();
