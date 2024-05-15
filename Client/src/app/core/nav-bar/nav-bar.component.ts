@@ -41,6 +41,11 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['/account/register']);
   }
 
+  navigateToConfigPage(){
+    console.log('Navigating to user configuration page');
+    this.router.navigate(['/account/config']);
+  }
+  
   logout() {
     console.log('Logging out');
     this.authService.logout().subscribe(() => {
