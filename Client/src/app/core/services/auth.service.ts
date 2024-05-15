@@ -2,6 +2,8 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import jwt_decode from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,6 @@ export class AuthService {
     );
   }
 
-
   logout(): Observable<void> {
     console.log('Calling logout service');
     return this.http.post<void>(this.logoutUrl, null).pipe(
@@ -40,9 +41,33 @@ export class AuthService {
     );
   }
 
-
   getToken(): string | null {
     return sessionStorage.getItem(this.tokenKey);
+  }
+  decodeToken(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedToken = JSON.parse(atob(base64));
+      return decodedToken;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = this.decodeToken(token);
+      return decodedToken['role'];
+    }
+    return null;
+  }
+  
+
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!token;
   }
 
   private handleError(error: HttpErrorResponse): Observable<any> {

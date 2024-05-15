@@ -5,11 +5,12 @@ import { RegisterComponent } from './register/register.component';
 import { LoginAndRegisterRoutingModule } from './login-and-register-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogoutComponent } from './logout/logout.component';
+import { UserConfigComponent } from './userConfig/userConfig.component';
 
 
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, LogoutComponent],
+  declarations: [LoginComponent, RegisterComponent, LogoutComponent,UserConfigComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,6 +22,7 @@ import { LogoutComponent } from './logout/logout.component';
     LoginComponent,
     RegisterComponent,
     LogoutComponent,
+    UserConfigComponent,
   ]
 })
 export class LoginAndRegisterModule { }
