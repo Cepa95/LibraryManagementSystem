@@ -1,7 +1,36 @@
-
 <div *ngIf="isAdmin">
-  <p>Admin Configuration</p>
+  <h2>Admin Configuration</h2>
+  <!-- Admin specific configuration content goes here -->
+  <p>Welcome, Admin! Here you can manage the system settings and users.</p>
 </div>
-<div *ngIf="!isAdmin">
-  <p>User Configuration</p>
+
+<div *ngIf="!!user && !isAdmin" class="container">
+  <h2>User Configuration</h2>
+  <form (ngSubmit)="updateUserDetails()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" class="form-control" id="firstName" [(ngModel)]="updateUser.firstName" name="firstName" required>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" class="form-control" id="lastName" [(ngModel)]="updateUser.lastName" name="lastName" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" [(ngModel)]="updateUser.password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" class="form-control" id="phone" [(ngModel)]="updateUser.phoneNumber" name="phone">
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+</div>
+
+<div *ngIf="!user && !isAdmin">
+  <p>Loading user data...</p>
+</div>
+
+<div *ngIf="!user && isAdmin">
+  <p>Loading admin data...</p>
 </div>
