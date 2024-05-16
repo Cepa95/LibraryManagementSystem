@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../shared/models/user';
 
 @Component({
@@ -12,12 +12,8 @@ import { User } from '../../shared/models/user';
 export class UserConfigComponent implements OnInit {
   isAdmin: boolean = false;
   user: User | undefined;
-  updateUser = {
-    firstName: '',
-    lastName: '',
-    password: '',
-    phoneNumber: ''
-  };
+  updateUser: Partial<User> = {}; // Use Partial<User> to make all properties optional
+  errorMessage: string = '';
 
   constructor(
     private authService: AuthService,
@@ -48,17 +44,13 @@ export class UserConfigComponent implements OnInit {
   }
 
   fetchUserDetails(userId: number): void {
+    console.log('Fetching user details for User ID:', userId);
     this.http.get<User>(`https://localhost:5001/api/account/${userId}`).subscribe(
       (user: User) => {
         console.log('User details fetched successfully:', user);
         this.user = user;
-        // Only assign the fields that you want to update
-        this.updateUser = {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          password: user.password,
-          phoneNumber: user.phoneNumber
-        };
+        // Expand updateUser object with all user properties
+        this.updateUser = { ...user };
       },
       (error) => {
         console.error('Error fetching user details:', error);
@@ -68,25 +60,47 @@ export class UserConfigComponent implements OnInit {
 
   updateUserDetails(): void {
     const userId = this.authService.getUserId();
+    console.log('Updating user details for User ID:', userId);
+  
     if (userId) {
       const headers = { 'Content-Type': 'application/json' };
-      this.http.put(`https://localhost:5001/api/account/${userId}`, this.updateUser, { headers }).subscribe(
+      // Filter out properties with null or empty string values from updateUser
+      const updatedFields = Object.fromEntries(
+        Object.entries(this.updateUser).filter(([_, value]) => value !== null && value !== '')
+      );
+  
+      console.log('Request Payload:', updatedFields); // Log the request payload
+  
+      this.http.put(`https://localhost:5001/api/account/${userId}`, updatedFields, { headers }).subscribe(
         () => {
           console.log('User details updated successfully');
-          // Update the local user object to reflect the changes
-          if (this.user) {
-            this.user.firstName = this.updateUser.firstName;
-            this.user.lastName = this.updateUser.lastName;
-            this.user.password = this.updateUser.password;
-            this.user.phoneNumber = this.updateUser.phoneNumber;
-          }
+          // Reset error message if the request succeeds
+          this.errorMessage = '';
         },
-        error => {
-          console.error('Error updating user details:', error);
+        (error: HttpErrorResponse) => {
+          if (error.status === 400 && error.error && error.error.errors) {
+            // Handle validation errors received from the server
+            const validationErrors: any = error.error.errors;
+            // Concatenate error messages
+            let messages: string[] = [];
+            for (const key in validationErrors) {
+              if (validationErrors.hasOwnProperty(key)) {
+                messages = messages.concat(validationErrors[key]);
+              }
+            }
+            this.errorMessage = messages.join('; ');
+          } else {
+            // Handle other types of errors
+            console.error('Error updating user details:', error);
+            this.errorMessage = 'An unexpected error occurred.';
+          }
         }
       );
     } else {
       console.error('User ID is null or undefined');
+      this.errorMessage = 'User ID is not available.';
     }
   }
-}
+  
+  }
+
