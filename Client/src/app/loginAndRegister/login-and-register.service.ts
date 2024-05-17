@@ -26,4 +26,7 @@ export class LoginAndRegisterService {
   checkEmailExistence(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.baseUrl}account/check-email-existence?email=${encodeURIComponent(email)}`);
   }
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}account/${userId}`);
+  }
 }

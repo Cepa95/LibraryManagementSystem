@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   private tokenKey = 'token';
   isLoggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private router:Router) { }
 
   login(email: string, password: string): Observable<string> {
     return this.http.post<{ token: string }>(this.loginUrl, { email, password }).pipe(
@@ -31,6 +32,7 @@ export class AuthService {
         sessionStorage.removeItem(this.tokenKey);
         this.isLoggedIn.emit(false);
         console.log('Logout successful, token removed.');
+        this.router.navigate(['account/login']);
       }),
       catchError(error => {
         console.error('Error during logout:', error);
