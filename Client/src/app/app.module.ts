@@ -9,7 +9,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { LoginAndRegisterModule } from './loginAndRegister/login-and-register.module';
-
+import { AdminGuard } from './guards/admin.guard';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,10 +24,12 @@ import { LoginAndRegisterModule } from './loginAndRegister/login-and-register.mo
     HttpClientModule,
     LibraryModule,
     LoginAndRegisterModule,
-    HomeModule
+    HomeModule,
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},AdminGuard
   ],
   bootstrap: [AppComponent]
 })
