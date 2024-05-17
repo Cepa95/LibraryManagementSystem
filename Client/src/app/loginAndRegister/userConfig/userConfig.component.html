@@ -6,18 +6,21 @@
 
 <div *ngIf="!!user && !isAdmin" class="container">
   <h2>User Configuration</h2>
-  <form (ngSubmit)="updateUserDetails()">
+  <form (ngSubmit)="updateUserDetails()" #userForm="ngForm" novalidate>
     <div class="form-group">
       <label for="firstName">First Name</label>
       <input type="text" class="form-control" id="firstName" [(ngModel)]="updateUser.firstName" name="firstName" required>
+      <div *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].dirty" class="text-danger">First Name is required.</div>
     </div>
     <div class="form-group">
       <label for="lastName">Last Name</label>
       <input type="text" class="form-control" id="lastName" [(ngModel)]="updateUser.lastName" name="lastName" required>
+      <div *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].dirty" class="text-danger">Last Name is required.</div>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
       <input type="password" class="form-control" id="password" [(ngModel)]="updateUser.password" name="password" required>
+      <div *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].dirty" class="text-danger">Password is required.</div>
     </div>
     <div class="form-group">
       <label for="phone">Phone Number</label>
