@@ -21,4 +21,9 @@ export class NavBarComponent {
     this.router.navigate(['/account/register']);
     console.log(this.router);
    }
+   navigateToLoanPage() {
+    console.log('Navigating to loan page');
+    this.router.navigate(['/loan']);
+    console.log(this.router);
+   }
 }
