@@ -1,0 +1,104 @@
+/* Add this to userConfig.component.scss */
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    margin-top: 10px;
+}
+
+.button {
+    margin-bottom: 10px;
+}
+
+.edit-btn {
+    background-color: rgb(226, 221, 215);
+}
+
+.admin-container {
+    border: 2px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+
+    .user-container {
+        border: 2px solid #a7a7a7;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    width: 60%;
+    /* Set width to 60% of the viewport */
+    height: 50%;
+    /* Set height to 50% of the viewport */
+    display: none;
+}
+
+/* Styling to show modal */
+.modal.open {
+    display: block;
+}
+
+/* Styling for modal content */
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 5px solid black;
+    /* Adjust border as needed */
+    border-radius: 5px;
+    width: 100%;
+    /* Occupy full width of the modal */
+    height: 100%;
+    /* Occupy full height of the modal */
+    box-sizing: border-box;
+    /* Include padding and border in the total width/height */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.close-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.edit-btn:hover,
+.update-btn:hover,
+.delete-btn:hover,
+.close-btn:hover {
+    filter: brightness(80%);
+    /* Reduce brightness to make it slightly darker */
+}
