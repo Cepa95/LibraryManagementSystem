@@ -5,6 +5,7 @@ import { Publisher } from '../shared/models/publisher';
 import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
 import { Subject, debounceTime } from 'rxjs';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-library',
@@ -13,6 +14,7 @@ import { Subject, debounceTime } from 'rxjs';
 })
 export class LibraryComponent implements OnInit {
   @ViewChild('search') searchTerm?: ElementRef;
+  isAdmin: boolean = false;
   books: Book[] = [];
   publishers: Publisher[] = [];
   categories: Category[] = [];
@@ -29,15 +31,23 @@ export class LibraryComponent implements OnInit {
   totalCount = 0;
   searchUpdated = new Subject<string>();
 
-  constructor(private libraryService: LibraryService) {
+  constructor(
+    private libraryService: LibraryService,
+    private authService: AuthService) {
     this.searchUpdated
       .pipe(debounceTime(300))
       .subscribe((search) => this.onSearch(search));
   }
   ngOnInit(): void {
+    this.checkAdminStatus();
     this.getBooks();
     this.getPublishers();
     this.getCategories();
+  }
+  
+  checkAdminStatus() {
+    const userRole = this.authService.getUserRole();
+    this.isAdmin = userRole === 'Admin';
   }
 
   getBooks() {

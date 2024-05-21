@@ -36,7 +36,7 @@
           [totalCount]="totalCount"
         >
         </app-count-header>
-        <button routerLink="/library/add" class="btn btn-primary">Add New Book</button>
+        <button *ngIf="isAdmin" routerLink="/library/add" class="btn btn-primary">Add New Book</button>
 
         <div class="d-flex mt-2">
           <input
