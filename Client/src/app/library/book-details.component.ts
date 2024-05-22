@@ -18,7 +18,7 @@ export class BookDetailsComponent implements OnInit {
     this.loadBook();
   }
 
-  loadBook(){
+  loadBook() {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     if (id) this.libraryService.getBook(+id).subscribe({
       next: book => this.book = book,

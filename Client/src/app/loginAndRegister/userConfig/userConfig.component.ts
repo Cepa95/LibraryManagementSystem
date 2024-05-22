@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../shared/models/user';
 import { NgForm } from '@angular/forms';
 import { LoginAndRegisterService } from '../login-and-register.service';
+
 @Component({
   selector: 'app-userConfig',
   templateUrl: './userConfig.component.html',
@@ -17,8 +18,12 @@ export class UserConfigComponent implements OnInit {
   updateUser: Partial<User> = {}; // Use Partial<User> to make all properties optional
   errorMessage: string = '';
   users: User[] = [];
+  filteredUsers: User[] = [];
   isModalOpen: boolean = false;
   selectedUser: User | null = null;
+  searchTerm: string = '';
+  loggedInAdminId: number | undefined;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -41,27 +46,46 @@ export class UserConfigComponent implements OnInit {
     console.log('Retrieved User ID:', userId);
 
     if (userId) {
+      this.loggedInAdminId = userId;
       this.fetchUserDetails(userId);
-      this.fetchAllUsers();
+      this.fetchAllUsers(userId);
       this.fetchUsers();
     } else {
       console.error('User ID is null or undefined');
       // Optionally, navigate to an error page or show an error message
     }
   }
-  fetchAllUsers(): void {
+
+  fetchAllUsers(loggedInAdminId: number): void {
     console.log('Fetching all users...');
     this.http.get<User[]>('https://localhost:5001/api/account').subscribe(
       (users: User[]) => {
         console.log('All users fetched successfully:', users);
-        this.users = users.filter(user => user.role !== 'Admin');
+        this.users = users.filter(user => user.id !== loggedInAdminId);
+        this.filterUsers(); // Filter users initially
       },
       (error) => {
         console.error('Error fetching users:', error);
       }
     );
   }
+
+
+  filterUsers(): void {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredUsers = this.users.filter(user =>
+      user.firstName.toLowerCase().includes(term) ||
+      user.lastName.toLowerCase().includes(term) ||
+      user.email.toLowerCase().includes(term)
+    );
+  }
+
   openEditModal(user: User) {
+    this.selectedUser = user;
+    this.isModalOpen = true;
+  }
+
+  openModal(user: User) {
     this.selectedUser = user;
     this.isModalOpen = true;
   }
@@ -70,10 +94,12 @@ export class UserConfigComponent implements OnInit {
     this.selectedUser = null;
     this.isModalOpen = false;
   }
+
   fetchUsers(): void {
     this.loginAndRegisterService.getUsers().subscribe(
       (users: User[]) => {
         this.users = users;
+        this.filterUsers(); // Filter users initially
       },
       (error) => {
         console.error('Error fetching users:', error);
@@ -90,38 +116,40 @@ export class UserConfigComponent implements OnInit {
   updateUserRole(selectedUser: User): void {
     if (!selectedUser) {
       console.error('No user selected for updating.');
+
       return;
     }
-  
+
     const userId = selectedUser.id;
     console.log('Updating user role for User ID:', userId);
-  
+
     const updatedUser = { ...selectedUser }; // Create a copy of the selectedUser
-  
+
     // Conditionally update the role property
     if (updatedUser.role === 'Admin') {
       updatedUser.role = 'User';
     } else if (updatedUser.role === 'User') {
       updatedUser.role = 'Admin';
     }
-  
+
     // Check if the dateOfBirth property exists and is not in the correct format
     if (updatedUser.dateOfBirth && !(updatedUser.dateOfBirth instanceof Date) && !/^\d{4}-\d{2}-\d{2}$/.test(updatedUser.dateOfBirth)) {
       updatedUser.dateOfBirth = this.formatDate(new Date(updatedUser.dateOfBirth)) as unknown as Date;
     }
-  
+
     const headers = { 'Content-Type': 'application/json' };
-  
+
     // Check if the user ID is available
     if (userId) {
       console.log('Request Payload:', updatedUser); // Log the request payload
-  
+
       // Send the HTTP PUT request to update the user role
       this.http.put(`https://localhost:5001/api/account/${userId}`, updatedUser, { headers }).subscribe(
         () => {
           console.log('User role updated successfully');
           this.errorMessage = ''; // Reset error message if the request succeeds
           this.closeModal(); // Close the modal after updating user role
+          this.fetchAllUsers(this.authService.getUserId()!); // Refresh the user list
         },
         (error: HttpErrorResponse) => {
           if (error.status === 400 && error.error && error.error.errors) {
@@ -146,8 +174,8 @@ export class UserConfigComponent implements OnInit {
       console.error('User ID is null or undefined');
       this.errorMessage = 'User ID is not available.';
     }
+    this.fetchAllUsers(this.authService.getUserId()!);
   }
-  
 
   deleteUser(userId: number | undefined): void {
     if (userId && confirm('Are you sure you want to delete this user?')) {
@@ -155,8 +183,11 @@ export class UserConfigComponent implements OnInit {
         () => {
           // User deleted successfully, remove from the list
           this.users = this.users.filter(u => u.id !== userId);
+          this.filteredUsers = this.filteredUsers.filter(u => u.id !== userId);
           this.selectedUser = null; // Deselect the user
           console.log('User deleted successfully');
+          // Reload the current route to refresh the page
+          location.reload();
         },
         (error: HttpErrorResponse) => {
           console.error('Error deleting user:', error);
@@ -164,9 +195,8 @@ export class UserConfigComponent implements OnInit {
         }
       );
     }
+    this.fetchAllUsers(this.authService.getUserId()!);
   }
-
-  ///////////////////////////////////////////////////////////////////////////////////////
 
   fetchUserDetails(userId: number): void {
     console.log('Fetching user details for User ID:', userId);
@@ -220,6 +250,8 @@ export class UserConfigComponent implements OnInit {
           console.log('User details updated successfully');
           // Reset error message if the request succeeds
           this.errorMessage = '';
+          // Alert the user of the successful update
+          alert('Personal data successfully changed.');
         },
         (error: HttpErrorResponse) => {
           if (error.status === 400 && error.error && error.error.errors) {
@@ -244,5 +276,63 @@ export class UserConfigComponent implements OnInit {
       console.error('User ID is null or undefined');
       this.errorMessage = 'User ID is not available.';
     }
+    this.fetchAllUsers(this.authService.getUserId()!);
   }
+  userSelfDelete(): void {
+    const userId = this.authService.getUserId();
+  
+    if (userId) {
+      // Display confirmation alert
+      const confirmation = confirm('Are you sure you want to delete your account?');
+  
+      if (confirmation) {
+        // User confirmed deletion, proceed with deletion
+        this.loginAndRegisterService.deleteUser(userId).subscribe(
+          () => {
+            // User deleted successfully, navigate to the login page
+            this.router.navigate(['/login']);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Error deleting user:', error);
+            this.errorMessage = 'An error occurred while deleting the user.';
+          }
+        );
+      } else {
+        // User cancelled deletion, do nothing
+        console.log('Deletion cancelled');
+      }
+    } else {
+      console.error('User ID is null or undefined');
+      this.errorMessage = 'User ID is not available.';
+    }
+  }
+  confirmUserDelete(): void {
+    const userId = this.authService.getUserId();
+  
+    if (userId) {
+      // Display confirmation window pop-up
+      const confirmation = window.confirm('Are you sure you want to delete your account?');
+  
+      if (confirmation) {
+        // User confirmed deletion, proceed with deletion
+        this.loginAndRegisterService.deleteUser(userId).subscribe(
+          () => {
+            // User deleted successfully, navigate to the login page
+            this.router.navigate(['account/login']);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Error deleting user:', error);
+            this.errorMessage = 'An error occurred while deleting the user.';
+          }
+        );
+      } else {
+        // User cancelled deletion, do nothing
+        console.log('Deletion cancelled');
+      }
+    } else {
+      console.error('User ID is null or undefined');
+      this.errorMessage = 'User ID is not available.';
+    }
+  }
+  
 }

@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/co
 import { Book } from '../../shared/models/book';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { LibraryService } from '../library.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-book-item',
@@ -16,7 +17,8 @@ export class BookItemComponent {
 
   constructor(
     private modalService: BsModalService,
-    private libraryService: LibraryService
+    private libraryService: LibraryService,
+    private authService:AuthService
   ) {}
 
   deleteBook(id: number) {
@@ -43,5 +45,8 @@ export class BookItemComponent {
     } else {
       console.error('Book ID is undefined');
     }
+  }
+  isAdmin(): boolean {
+    return this.authService.getUserRole() === 'Admin';
   }
 }
