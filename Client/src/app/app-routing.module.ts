@@ -8,7 +8,6 @@ import { NotFoundComponent } from './core/not-found/not-found.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-
   { path: 'library', loadChildren: () => import('./library/library.module').then(m => m.LibraryModule) },
   { path: 'account', loadChildren: () => import('./loginAndRegister/login-and-register.module').then(m => m.LoginAndRegisterModule) },
   // { path: '', component: LibraryComponent },

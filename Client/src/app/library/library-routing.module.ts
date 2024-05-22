@@ -11,8 +11,6 @@ const routes: Routes = [
   { path: 'update/:id', component: UpdateBookComponent },
   { path: 'add', component: AddBookComponent },
   { path: ':id', component: BookDetailsComponent },
-
-  
 ]
 
 
