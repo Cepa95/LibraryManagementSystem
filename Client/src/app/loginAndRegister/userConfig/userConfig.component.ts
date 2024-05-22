@@ -85,6 +85,11 @@ export class UserConfigComponent implements OnInit {
     this.isModalOpen = true;
   }
 
+  openModal(user: User) {
+    this.selectedUser = user;
+    this.isModalOpen = true;
+  }
+
   closeModal() {
     this.selectedUser = null;
     this.isModalOpen = false;
@@ -273,5 +278,61 @@ export class UserConfigComponent implements OnInit {
     }
     this.fetchAllUsers(this.authService.getUserId()!);
   }
-
+  userSelfDelete(): void {
+    const userId = this.authService.getUserId();
+  
+    if (userId) {
+      // Display confirmation alert
+      const confirmation = confirm('Are you sure you want to delete your account?');
+  
+      if (confirmation) {
+        // User confirmed deletion, proceed with deletion
+        this.loginAndRegisterService.deleteUser(userId).subscribe(
+          () => {
+            // User deleted successfully, navigate to the login page
+            this.router.navigate(['/login']);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Error deleting user:', error);
+            this.errorMessage = 'An error occurred while deleting the user.';
+          }
+        );
+      } else {
+        // User cancelled deletion, do nothing
+        console.log('Deletion cancelled');
+      }
+    } else {
+      console.error('User ID is null or undefined');
+      this.errorMessage = 'User ID is not available.';
+    }
+  }
+  confirmUserDelete(): void {
+    const userId = this.authService.getUserId();
+  
+    if (userId) {
+      // Display confirmation window pop-up
+      const confirmation = window.confirm('Are you sure you want to delete your account?');
+  
+      if (confirmation) {
+        // User confirmed deletion, proceed with deletion
+        this.loginAndRegisterService.deleteUser(userId).subscribe(
+          () => {
+            // User deleted successfully, navigate to the login page
+            this.router.navigate(['account/login']);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Error deleting user:', error);
+            this.errorMessage = 'An error occurred while deleting the user.';
+          }
+        );
+      } else {
+        // User cancelled deletion, do nothing
+        console.log('Deletion cancelled');
+      }
+    } else {
+      console.error('User ID is null or undefined');
+      this.errorMessage = 'User ID is not available.';
+    }
+  }
+  
 }

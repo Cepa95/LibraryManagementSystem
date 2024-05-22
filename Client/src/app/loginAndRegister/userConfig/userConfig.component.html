@@ -15,7 +15,7 @@
   </div>
 
   <!-- Display filtered users -->
-  
+
   <div *ngFor="let user of filteredUsers">
     <ng-container *ngIf="user.id !== loggedInAdminId">
       <div class="user-container">
@@ -28,7 +28,6 @@
       </div>
     </ng-container>
   </div>
-  
 
   <!-- Modal for editing user details -->
   <div class="modal" [class.open]="isModalOpen">
@@ -44,8 +43,12 @@
       <p>Last Name: {{ selectedUser.lastName }}</p>
 
       <!-- Buttons for updating and deleting user -->
-      <button (click)="updateUserRole(selectedUser)" class="update-btn">Update role</button>
-      <button (click)="deleteUser(selectedUser?.id)" class="delete-btn">Delete</button>
+      <button (click)="updateUserRole(selectedUser)" class="update-btn">
+        Update role
+      </button>
+      <button (click)="deleteUser(selectedUser?.id)" class="delete-btn">
+        Delete
+      </button>
     </div>
   </div>
 </div>
@@ -53,77 +56,92 @@
 <div *ngIf="!!user && !isAdmin" class="container">
   <h2>User Configuration</h2>
   <form (ngSubmit)="updateUserDetails()" #userForm="ngForm" novalidate>
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="firstName"
-        [(ngModel)]="updateUser.firstName"
-        name="firstName"
-        required
-      />
-      <div
-        *ngIf="
-          userForm.controls['firstName'].invalid &&
-          userForm.controls['firstName'].dirty
-        "
-        class="text-danger"
-      >
-        First Name is required.
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          [(ngModel)]="updateUser.firstName"
+          name="firstName"
+          required
+        />
+        <div
+          *ngIf="
+            userForm.controls['firstName'].invalid &&
+            userForm.controls['firstName'].dirty
+          "
+          class="text-danger"
+        >
+          First Name is required.
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          [(ngModel)]="updateUser.lastName"
+          name="lastName"
+          required
+        />
+        <div
+          *ngIf="
+            userForm.controls['lastName'].invalid &&
+            userForm.controls['lastName'].dirty
+          "
+          class="text-danger"
+        >
+          Last Name is required.
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          [(ngModel)]="updateUser.password"
+          name="password"
+          required
+        />
+        <div
+          *ngIf="
+            userForm.controls['password'].invalid &&
+            userForm.controls['password'].dirty
+          "
+          class="text-danger"
+        >
+          Password is required.
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="phone">Phone Number</label>
+        <input
+          type="text"
+          class="form-control"
+          id="phone"
+          [(ngModel)]="updateUser.phoneNumber"
+          name="phone"
+        />
       </div>
     </div>
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="lastName"
-        [(ngModel)]="updateUser.lastName"
-        name="lastName"
-        required
-      />
-      <div
-        *ngIf="
-          userForm.controls['lastName'].invalid &&
-          userForm.controls['lastName'].dirty
-        "
-        class="text-danger"
-      >
-        Last Name is required.
+    <div class="form-row">
+      <div class="form-group col">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+      <div class="form-group col">
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="confirmUserDelete()"
+        >
+          Delete user
+        </button>
       </div>
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        [(ngModel)]="updateUser.password"
-        name="password"
-        required
-      />
-      <div
-        *ngIf="
-          userForm.controls['password'].invalid &&
-          userForm.controls['password'].dirty
-        "
-        class="text-danger"
-      >
-        Password is required.
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="phone">Phone Number</label>
-      <input
-        type="text"
-        class="form-control"
-        id="phone"
-        [(ngModel)]="updateUser.phoneNumber"
-        name="phone"
-      />
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
   </form>
 </div>
 
