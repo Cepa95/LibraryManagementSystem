@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -25,21 +25,26 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
-
+  
   logout(): Observable<void> {
+    console.log('Logout method called');
     return this.http.post<void>(this.logoutUrl, null).pipe(
-      tap(() => {
-        sessionStorage.removeItem(this.tokenKey);
-        this.isLoggedIn.emit(false);
-        console.log('Logout successful, token removed.');
-        this.router.navigate(['account/login']);
-      }),
       catchError(error => {
         console.error('Error during logout:', error);
         return throwError(error);
+      }),
+      finalize(() => {
+        
+        // Clear token from both sessionStorage and localStorage
+        sessionStorage.removeItem(this.tokenKey);
+        localStorage.removeItem(this.tokenKey);
+        this.isLoggedIn.emit(false);
+        alert("User logged out");
+        console.log('Logout successful, token removed.');
+        // this.router.navigate(['account/login']);
       })
     );
-  }
+  }  
 
   getToken(): string | null {
     const token = sessionStorage.getItem(this.tokenKey);

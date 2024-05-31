@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../shared/models/user';
-import { NgForm } from '@angular/forms';
+import { NgForm,FormBuilder, FormGroup, Validators  } from '@angular/forms';
 import { LoginAndRegisterService } from '../login-and-register.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-userConfig',
@@ -13,6 +14,7 @@ import { LoginAndRegisterService } from '../login-and-register.service';
 })
 export class UserConfigComponent implements OnInit {
   @ViewChild('userForm', { static: false }) userForm!: NgForm;
+  form!: FormGroup;
   isAdmin: boolean = false;
   user: User | undefined;
   updateUser: Partial<User> = {};
@@ -32,11 +34,13 @@ export class UserConfigComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private http: HttpClient,
-    private loginAndRegisterService: LoginAndRegisterService
+    private loginAndRegisterService: LoginAndRegisterService,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
+      this.buildForm();
       console.log('User not authenticated, redirecting to login...');
       this.router.navigate(['/login']);
       return;
@@ -57,6 +61,12 @@ export class UserConfigComponent implements OnInit {
     } else {
       console.error('User ID is null or undefined');
     }
+  }
+  private buildForm() {
+    this.form = this.formBuilder.group({
+      newPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/)]],
+      confirmNewPassword: ['', Validators.required]
+    });
   }
 
   fetchAllUsers(loggedInAdminId: number): void {
@@ -191,22 +201,26 @@ openPasswordModal() {
     );
   }
 
-  deleteUser(userId: number | undefined): void {
-    if (userId && confirm('Are you sure you want to delete this user?')) {
-      this.loginAndRegisterService.deleteUser(userId).subscribe(
-        () => {
-          this.users = this.users.filter(u => u.id !== userId);
-          this.filteredUsers = this.filteredUsers.filter(u => u.id !== userId);
-          this.selectedUser = null;
-          location.reload();
-        },
-        (error: HttpErrorResponse) => {
-          this.errorMessage = 'An error occurred while deleting the user.';
-        }
-      );
-    }
+  deleteUser(userId: number | undefined): Observable<void> {
+    return new Observable<void>(observer => {
+      if (userId && confirm('Are you sure you want to delete this user?')) {
+        this.loginAndRegisterService.deleteUser(userId).subscribe(
+          () => {
+            this.users = this.users.filter(u => u.id !== userId);
+            this.filteredUsers = this.filteredUsers.filter(u => u.id !== userId);
+            this.selectedUser = null;
+            location.reload();
+            observer.next(); // Notify that deletion is complete
+            observer.complete(); // Complete the observable
+          },
+          (error: HttpErrorResponse) => {
+            this.errorMessage = 'An error occurred while deleting the user.';
+            observer.error(error); // Pass error to observer
+          }
+        );
+      }
+    });
   }
-
   fetchUserDetails(userId: number): void {
     this.http.get<User>(`https://localhost:5001/api/account/${userId}`).subscribe(
       (user: User) => {
@@ -278,10 +292,17 @@ openPasswordModal() {
   
       if (confirmation) {
         // User confirmed deletion, proceed with deletion
+        alert("Step 1 , deleting data");
         this.loginAndRegisterService.deleteUser(userId).subscribe(
           () => {
-            // User deleted successfully, navigate to the login page
-            this.router.navigate(['/login']);
+            // User deleted successfully, clear authentication token and navigate to the login page
+            alert("Step 2 , deleting token");
+            this.authService.logout().subscribe(() => {
+              console.log('User logged out'); // Add this line to verify logout
+              // this.router.navigate(['/login']);
+            }, error => {
+              console.error('Error logging out:', error); // Log any errors during logout
+            });
           },
           (error: HttpErrorResponse) => {
             console.error('Error deleting user:', error);
@@ -297,6 +318,8 @@ openPasswordModal() {
       this.errorMessage = 'User ID is not available.';
     }
   }
+  
+  
 
   confirmUserDelete(): void {
     const userId = this.authService.getUserId();
@@ -309,8 +332,14 @@ openPasswordModal() {
         // User confirmed deletion, proceed with deletion
         this.loginAndRegisterService.deleteUser(userId).subscribe(
           () => {
-            // User deleted successfully, navigate to the login page
-            this.router.navigate(['account/login']);
+            // User deleted successfully
+            // Logout the user
+            this.authService.logout().subscribe(() => {
+              // Navigate to the login page
+              this.router.navigate(['account/login']);
+            }, error => {
+              console.error('Error logging out:', error); // Log any errors during logout
+            });
           },
           (error: HttpErrorResponse) => {
             console.error('Error deleting user:', error);
@@ -326,4 +355,5 @@ openPasswordModal() {
       this.errorMessage = 'User ID is not available.';
     }
   }
-}
+  
+}  
