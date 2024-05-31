@@ -13,12 +13,16 @@ import { DatePipe } from '@angular/common';
 export class RegisterComponent implements OnInit {
   isCollapsed = true;
   form!: FormGroup;
-
+  today:string;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private loginAndRegisterService: LoginAndRegisterService
-  ) { }
+  ) {    const todayDate = new Date();
+    const year = todayDate.getFullYear();
+    const month = ('0' + (todayDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + todayDate.getDate()).slice(-2);
+    this.today = `${year}-${month}-${day}`; }
 
   ngOnInit() {
     this.buildForm();

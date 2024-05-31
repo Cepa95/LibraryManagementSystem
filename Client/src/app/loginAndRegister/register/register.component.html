@@ -58,11 +58,13 @@
       </div>
       <div class="text-field">
         <label for="dateOfBirth">Date of Birth:</label>
-        <input type="date" id="dateOfBirth" formControlName="dateOfBirth" required>
+        <input type="date" id="dateOfBirth" formControlName="dateOfBirth" required [max]="today">
         <div *ngIf="form.get('dateOfBirth')?.invalid && (form.get('dateOfBirth')?.dirty || form.get('dateOfBirth')?.touched)">
           <div *ngIf="form.get('dateOfBirth')?.errors?.['required']">Date of Birth is required</div>
         </div>
       </div>
+      
+      
       <button class="my-form__button" type="submit">
         Sign up
       </button>
@@ -80,3 +82,4 @@
     </div>
   </div>
 </div>
+
