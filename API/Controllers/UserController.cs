@@ -236,6 +236,30 @@ namespace API.Controllers
             return Ok(new { message = $"User under id: {id} successfully deleted" });
         }
 
+        [HttpPut("admin/password/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> UpdateAdminPasswordAsync(int id, [FromBody] PasswordUpdateDto passwordUpdateDto)
+        {
+            _logger.LogInformation($"Updating password for admin with id: {id}");
+
+            var admin = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+
+            if (admin == null || admin.Role != "Admin")
+            {
+                return NotFound(new ApiResponse(404, $"Admin with id: {id} is not found"));
+            }
+
+            // You may want to implement password hashing and salting here
+            admin.Password = passwordUpdateDto.NewPassword;
+
+            _unitOfWork.Repository<User>().Update(admin);
+            await _unitOfWork.Complete();
+
+            return Ok(new { message = $"Admin password updated successfully" });
+        }
+
+
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
