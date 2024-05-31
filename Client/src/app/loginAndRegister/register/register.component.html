@@ -5,69 +5,177 @@
         <h1>Create your account</h1>
       </div>
       <div class="text-field">
-        <label for="firstName">First Name:
-          <input type="text" id="firstName" formControlName="firstName" autocomplete="off" placeholder="Your First Name" required>
+        <label for="firstName"
+          >First Name:
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            autocomplete="off"
+            placeholder="Your First Name"
+            required
+          />
         </label>
-        <div *ngIf="form.get('firstName')?.invalid && (form.get('firstName')?.dirty || form.get('firstName')?.touched)">
-          <div *ngIf="form.get('firstName')?.errors?.['required']">First Name is required</div>
+        <div
+          *ngIf="
+            form.get('firstName')?.invalid &&
+            (form.get('firstName')?.dirty || form.get('firstName')?.touched)
+          "
+        >
+          <div *ngIf="form.get('firstName')?.errors?.['required']">
+            First Name is required
+          </div>
         </div>
       </div>
       <div class="text-field">
-        <label for="lastName">Last Name:
-          <input type="text" id="lastName" formControlName="lastName" autocomplete="off" placeholder="Your Last Name" required>
+        <label for="lastName"
+          >Last Name:
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            autocomplete="off"
+            placeholder="Your Last Name"
+            required
+          />
         </label>
-        <div *ngIf="form.get('lastName')?.invalid && (form.get('lastName')?.dirty || form.get('lastName')?.touched)">
-          <div *ngIf="form.get('lastName')?.errors?.['required']">Last Name is required</div>
+        <div
+          *ngIf="
+            form.get('lastName')?.invalid &&
+            (form.get('lastName')?.dirty || form.get('lastName')?.touched)
+          "
+        >
+          <div *ngIf="form.get('lastName')?.errors?.['required']">
+            Last Name is required
+          </div>
         </div>
       </div>
       <div class="text-field">
-        <label for="email">Email:
-          <input type="email" id="email" formControlName="email" autocomplete="off" placeholder="Your Email" required>
+        <label for="email"
+          >Email:
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            autocomplete="off"
+            placeholder="Your Email"
+            required
+          />
         </label>
-        <div *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)">
-          <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
-          <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
+        <div
+          *ngIf="
+            form.get('email')?.invalid &&
+            (form.get('email')?.dirty || form.get('email')?.touched)
+          "
+        >
+          <div *ngIf="form.get('email')?.errors?.['required']">
+            Email is required
+          </div>
+          <div *ngIf="form.get('email')?.errors?.['email']">
+            Invalid email format
+          </div>
           <div *ngIf="emailExistsError">Email already exists</div>
         </div>
       </div>
       <div class="text-field">
-        <label for="password">Password:
-          <input id="password" type="password" formControlName="password" placeholder="Your Password" title="Minimum 6 characters, at least 1 Alphabet and 1 Number" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
+        <label for="password"
+          >Password:
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Your Password"
+            title="Minimum 6 characters, at least 1 Alphabet and 1 Number"
+            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+            required
+          />
         </label>
-        <div *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)">
-          <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
-          <div *ngIf="form.get('password')?.errors?.['pattern']">Password must contain at least 6 characters, 1 alphabet, and 1 number</div>
+        <div
+          *ngIf="
+            form.get('password')?.invalid &&
+            (form.get('password')?.dirty || form.get('password')?.touched)
+          "
+        >
+          <div *ngIf="form.get('password')?.errors?.['required']">
+            Password is required
+          </div>
+          <div *ngIf="form.get('password')?.errors?.['pattern']">
+            Password must contain at least 6 characters, 1 alphabet, and 1
+            number
+          </div>
         </div>
       </div>
       <div class="text-field">
-        <label for="confirm-password">Repeat Password:
-          <input id="confirm-password" type="password" formControlName="confirmPassword" placeholder="Repeat Password" required>
+        <label for="confirm-password"
+          >Repeat Password:
+          <input
+            id="confirm-password"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Repeat Password"
+            required
+          />
         </label>
-        <div *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">
-          <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirmation Password is required</div>
-          <div *ngIf="form.get('confirmPassword')?.errors?.['notSame']">Passwords do not match</div>
+        <div
+          *ngIf="
+            form.get('confirmPassword')?.invalid &&
+            (form.get('confirmPassword')?.dirty ||
+              form.get('confirmPassword')?.touched)
+          "
+        >
+          <div *ngIf="form.get('confirmPassword')?.errors?.['required']">
+            Confirmation Password is required
+          </div>
+          <div *ngIf="form.get('confirmPassword')?.errors?.['notSame']">
+            Passwords do not match
+          </div>
         </div>
       </div>
       <div class="text-field">
-        <label for="phoneNumber">Phone Number:
-          <input type="tel" id="phoneNumber" formControlName="phoneNumber" autocomplete="off" placeholder="Your Phone Number" required>
+        <label for="phoneNumber"
+          >Phone Number:
+          <input
+            type="tel"
+            id="phoneNumber"
+            formControlName="phoneNumber"
+            autocomplete="off"
+            placeholder="Your Phone Number"
+            required
+          />
         </label>
-        <div *ngIf="form.get('phoneNumber')?.invalid && (form.get('phoneNumber')?.dirty || form.get('phoneNumber')?.touched)">
-          <div *ngIf="form.get('phoneNumber')?.errors?.['required']">Phone Number is required</div>
+        <div
+          *ngIf="
+            form.get('phoneNumber')?.invalid &&
+            (form.get('phoneNumber')?.dirty || form.get('phoneNumber')?.touched)
+          "
+        >
+          <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
+            Phone Number is required
+          </div>
         </div>
       </div>
       <div class="text-field">
         <label for="dateOfBirth">Date of Birth:</label>
-        <input type="date" id="dateOfBirth" formControlName="dateOfBirth" required [max]="today">
-        <div *ngIf="form.get('dateOfBirth')?.invalid && (form.get('dateOfBirth')?.dirty || form.get('dateOfBirth')?.touched)">
-          <div *ngIf="form.get('dateOfBirth')?.errors?.['required']">Date of Birth is required</div>
+        <input
+          type="date"
+          id="dateOfBirth"
+          formControlName="dateOfBirth"
+          required
+          [max]="today"
+        />
+        <div
+          *ngIf="
+            form.get('dateOfBirth')?.invalid &&
+            (form.get('dateOfBirth')?.dirty || form.get('dateOfBirth')?.touched)
+          "
+        >
+          <div *ngIf="form.get('dateOfBirth')?.errors?.['required']">
+            Date of Birth is required
+          </div>
         </div>
       </div>
-      
-      
-      <button class="my-form__button" type="submit">
-        Sign up
-      </button>
+
+      <button class="my-form__button" type="submit">Sign up</button>
       <div class="my-form__actions">
         <div class="my-form__signup">
           <a routerLink="/account/login" title="Log in">Log in</a>
@@ -76,10 +184,9 @@
     </form>
   </div>
   <div class="info-side">
-    <img src="assets/OIP.jpg"/>
+    <img src="assets/OIP.jpg" />
     <div class="welcome-message">
       <h2>LibraryManagementSystem</h2>
     </div>
   </div>
 </div>
-

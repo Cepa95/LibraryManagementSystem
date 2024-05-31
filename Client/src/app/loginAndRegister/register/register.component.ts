@@ -13,16 +13,18 @@ import { DatePipe } from '@angular/common';
 export class RegisterComponent implements OnInit {
   isCollapsed = true;
   form!: FormGroup;
-  today:string;
+  today: string;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private loginAndRegisterService: LoginAndRegisterService
-  ) {    const todayDate = new Date();
+  ) {
+    const todayDate = new Date();
     const year = todayDate.getFullYear();
     const month = ('0' + (todayDate.getMonth() + 1)).slice(-2);
     const day = ('0' + todayDate.getDate()).slice(-2);
-    this.today = `${year}-${month}-${day}`; }
+    this.today = `${year}-${month}-${day}`;
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -56,7 +58,7 @@ export class RegisterComponent implements OnInit {
   private checkEmailExistence(email: string) {
     this.loginAndRegisterService.checkEmailExistence(email).subscribe(
       (exists: boolean) => {
-        
+
         if (exists) {
           console.log('Email already exists');
           this.emailExistsError = true;
@@ -82,37 +84,37 @@ export class RegisterComponent implements OnInit {
 
   private createUser() {
     const userData = this.form.value;
-  
+
     // Convert the string representation of date to a Date object
     const inputDate = new Date(userData.dateOfBirth);
-  
+
     console.log('Date of birth before formatting:', userData.dateOfBirth);
     console.log('Type of Date:', typeof inputDate);
     console.log('Value of Date:', inputDate);
-  
+
     // Format the date object
     const formattedDate = this.formatDate(inputDate);
-  
+
     console.log('Date of birth after formatting:', formattedDate);
-  
+
     // Update userData with the formatted date
     userData.dateOfBirth = formattedDate;
-  
+
     userData.role = 'BasicUser';
-  
+
     this.loginAndRegisterService.register(userData).subscribe(
       (user) => {
         console.log('User created successfully:', user);
         this.navigateToSignInPage();
       },
       (error) => {
-  
+
         console.error('Error creating user:', error);
         // Handle the error
       }
     );
   }
-  
+
 
 
 
