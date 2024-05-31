@@ -1,9 +1,9 @@
 <div *ngIf="isAdmin" class="admin-container">
   <h2>Admin Configuration</h2>
-  <!-- Admin specific configuration content goes here -->
+  <button (click)="openPasswordModal()" class="change-password-btn">Change Password</button>
+
   <p>Welcome, Admin! Here you can manage the system settings and users.</p>
 
-  <!-- Search input for filtering users -->
   <div class="search-container">
     <input
       type="text"
@@ -14,8 +14,6 @@
     />
   </div>
 
-  <!-- Display filtered users -->
-
   <div *ngFor="let user of filteredUsers">
     <ng-container *ngIf="user.id !== loggedInAdminId">
       <div class="user-container">
@@ -23,7 +21,7 @@
         <p>Email: {{ user.email }}</p>
         <p>Phone Number: {{ user.phoneNumber }}</p>
         <p>Role: {{ user.role }}</p>
-        <!-- Display other user details as needed -->
+        <p>Loaned books:</p>
         <button (click)="openEditModal(user)" class="edit-btn">Edit</button>
       </div>
     </ng-container>
@@ -43,7 +41,7 @@
       <p>Last Name: {{ selectedUser.lastName }}</p>
 
       <!-- Buttons for updating and deleting user -->
-      <button (click)="updateUserRole(selectedUser)" class="update-btn">
+      <button (click)="updateUserRole()" class="update-btn">
         Update role
       </button>
       <button (click)="deleteUser(selectedUser?.id)" class="delete-btn">
@@ -51,6 +49,25 @@
       </button>
     </div>
   </div>
+</div>
+  <!-- Modal for changing admin password -->
+  <div [class.open]="isPasswordModalOpen" class="password-modal">
+    <div class="password-modal-content">
+        <!-- Modal content -->
+        <h2>Change Admin Password</h2>
+        <!-- Password change form -->
+        <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" class="form-control" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required />
+        </div>
+        <div class="form-group">
+            <label for="confirmNewPassword">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirmNewPassword" [(ngModel)]="confirmNewPassword" name="confirmNewPassword" required />
+            <div *ngIf="newPassword !== confirmNewPassword && newPassword !== '' && confirmNewPassword !== ''" class="text-danger">Passwords do not match.</div>
+        </div>
+        <button (click)="updateAdminPassword()" class="update-password-btn">Update Admin Password</button>
+        <button (click)="closePasswordModal()" class="close-password-btn">Close</button>
+    </div>
 </div>
 
 <div *ngIf="!!user && !isAdmin" class="container">
@@ -115,6 +132,26 @@
           class="text-danger"
         >
           Password is required.
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+        />
+        <div
+          *ngIf="
+            confirmPassword !== updateUser.password &&
+            userForm.controls['confirmPassword'].dirty
+          "
+          class="text-danger"
+        >
+          Passwords do not match.
         </div>
       </div>
       <div class="form-group col">

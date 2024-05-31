@@ -18,6 +18,47 @@
 .edit-btn {
     background-color: rgb(226, 221, 215);
 }
+.password-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 300px; /* Adjust the width as needed */
+    height: 300px; /* Adjust the height as needed */
+    display: none;
+}
+.password-modal-content {
+    background-color: lightblue; /* Change background color */
+    padding: 20px;
+    border-radius: 5px;
+    width: 350px; /* Adjust width as needed */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+/* Show the password modal when it is open */
+.password-modal.open {
+    display: block;
+}
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.password-toggle i {
+    font-size: 1.2em;
+}
+
+.form-control {
+    padding-right: 30px; // Ensure space for the toggle icon
+}
 
 .admin-container {
     border: 2px solid #ccc;
@@ -98,6 +139,20 @@
 .update-btn:hover,
 .delete-btn:hover,
 .close-btn:hover {
+    transition: filter 0.3s ease; /* Add transition effect */
     filter: brightness(80%);
     /* Reduce brightness to make it slightly darker */
+}
+/* Styling for buttons */
+.change-password-btn,
+.update-password-btn,
+.close-password-btn {
+    transition: filter 0.3s ease; /* Add transition effect */
+}
+
+/* Reduce brightness when hovering over the buttons */
+.change-password-btn:hover,
+.update-password-btn:hover,
+.close-password-btn:hover {
+    filter: brightness(80%);
 }
