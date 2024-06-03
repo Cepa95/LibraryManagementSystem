@@ -2,7 +2,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
+using BCrypt.Net;
 using API.Dtos;
 using API.Errors;
 using AutoMapper;
@@ -63,18 +63,18 @@ namespace API.Controllers
             var user = await _userRepository.GetEntityWithSpec(new UserEmailSpecification(loginDto.Email));
 
             // Check if user exists and password matches
-            if (user != null && user.Password == loginDto.Password)
+            if (user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
                 // User authenticated successfully
 
                 // Create claims for the JWT token
                 var claims = new[]
                 {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // User ID
-            new Claim(ClaimTypes.Email, user.Email), // User email
-            new Claim(ClaimTypes.Role, user.Role), // User role
-            // Add more claims as needed
-        };
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // User ID
+                    new Claim(ClaimTypes.Email, user.Email), // User email
+                    new Claim(ClaimTypes.Role, user.Role), // User role
+                    // Add more claims as needed
+                };
 
                 // Create JWT token
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -179,6 +179,9 @@ namespace API.Controllers
             // Convert DateOfBirth to UTC before saving
             newUser.DateOfBirth = newDateTime.ToUniversalTime();
 
+            // Hash the password before saving the user
+            newUser.Password = BCrypt.Net.BCrypt.HashPassword(registrationDto.Password);
+
             _unitOfWork.Repository<User>().Add(newUser);
             await _unitOfWork.Complete();
 
@@ -250,8 +253,9 @@ namespace API.Controllers
                 return NotFound(new ApiResponse(404, $"Admin with id: {id} is not found"));
             }
 
-            // You may want to implement password hashing and salting here
-            admin.Password = passwordUpdateDto.NewPassword;
+            // Hash the new password before saving it
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(passwordUpdateDto.NewPassword);
+            admin.Password = hashedPassword;
 
             _unitOfWork.Repository<User>().Update(admin);
             await _unitOfWork.Complete();
@@ -279,16 +283,18 @@ namespace API.Controllers
             // Convert DateTimeOffset properties to UTC
             user.DateOfBirth = user.DateOfBirth.ToUniversalTime();
 
+            // Check if password is being updated and hash it
+            if (!string.IsNullOrEmpty(userUpdateDto.Password))
+            {
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userUpdateDto.Password);
+                user.Password = hashedPassword;
+            }
+
             _unitOfWork.Repository<User>().Update(user);
             await _unitOfWork.Complete();
 
             return Ok(_mapper.Map<UserDto>(user));
         }
-        // {
-
-        // }
-
-
 
         // Helper method to validate DateOfBirth format
         private bool IsValidDateOfBirth(string dateOfBirth)
@@ -296,6 +302,5 @@ namespace API.Controllers
             DateTimeOffset result;
             return DateTimeOffset.TryParse(dateOfBirth, out result);
         }
-
     }
 }

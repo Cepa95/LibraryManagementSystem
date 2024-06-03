@@ -144,13 +144,14 @@
       <div class="form-group col">
         <label for="password">Password</label>
         <input
-          type="password"
-          class="form-control"
-          id="password"
-          [(ngModel)]="updateUser.password"
-          name="password"
-          required
-          pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+        type="password"
+        class="form-control"
+        id="password"
+        [(ngModel)]="updateUser.password"
+        name="password"
+        required
+        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+        autocomplete="new-password"
         />
         <div
           *ngIf="

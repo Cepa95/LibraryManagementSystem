@@ -53,6 +53,11 @@ export class UserConfigComponent implements OnInit {
       return;
     }
 
+
+    this.updateUser = {
+      password: ''
+    };
+    
     const userRole = this.authService.getUserRole();
     this.isAdmin = userRole === 'Admin';
     console.log('User Role:', userRole);
@@ -236,7 +241,7 @@ export class UserConfigComponent implements OnInit {
     this.http.get<User>(`https://localhost:5001/api/account/${userId}`).subscribe(
       (user: User) => {
         this.user = user;
-        this.updateUser = { ...user };
+        this.updateUser = { ...user,password:'' };
       },
       (error) => {
         console.error('Error fetching user details:', error);
