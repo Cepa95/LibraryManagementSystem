@@ -29,6 +29,8 @@ export class UserConfigComponent implements OnInit {
   isPasswordModalOpen: boolean = false;
   newPassword: string = '';
   confirmNewPassword: string = '';
+  passwordForm: FormGroup;
+  passwordPattern: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
   constructor(
     private authService: AuthService,
@@ -36,7 +38,12 @@ export class UserConfigComponent implements OnInit {
     private http: HttpClient,
     private loginAndRegisterService: LoginAndRegisterService,
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+    this.passwordForm = this.formBuilder.group({
+      newPassword: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
+      confirmNewPassword: ['', [Validators.required]]
+    }, { validator: this.passwordMatchValidator });
+  }
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
@@ -68,7 +75,11 @@ export class UserConfigComponent implements OnInit {
       confirmNewPassword: ['', Validators.required]
     });
   }
-
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmNewPassword = form.get('confirmNewPassword')?.value;
+    return newPassword === confirmNewPassword ? null : { 'mismatch': true };
+  }
   fetchAllUsers(loggedInAdminId: number): void {
     console.log('Fetching all users...');
     this.http.get<User[]>('https://localhost:5001/api/account').subscribe(
