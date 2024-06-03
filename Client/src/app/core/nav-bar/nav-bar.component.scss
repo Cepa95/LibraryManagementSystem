@@ -1,15 +1,58 @@
-
 .button {
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    align-items: end;
-    font-size: 16px;
-  }
-
-.nav-item .nav-link.active {
-    color: orange !important;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  align-items: end;
+  font-size: 16px;
 }
 
+.nav-item .nav-link.active {
+  color: orange !important;
+}
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.navbar-collapse {
+  flex: 1;
+}
+
+.navbar-collapse.justify-content-end {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Custom class to adjust alignment */
+.navbar-custom-container {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+@media (max-width: 767px) {
+  .navbar-collapse.justify-content-end {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 15px; // Adjust as needed for spacing
+  }
+
+  .navbar-collapse.justify-content-end .btn {
+    margin-left: 10px; // Adjust as needed for spacing
+  }
+}
