@@ -57,7 +57,7 @@ export class UserConfigComponent implements OnInit {
     this.updateUser = {
       password: ''
     };
-    
+
     const userRole = this.authService.getUserRole();
     this.isAdmin = userRole === 'Admin';
     console.log('User Role:', userRole);
@@ -130,22 +130,27 @@ export class UserConfigComponent implements OnInit {
   }
 
   updateAdminPassword(): void {
-    if (this.newPassword !== this.confirmNewPassword) {
-      console.log("Passwords do not match.");
+    if (this.passwordForm.invalid) {
+      console.log("Form is invalid.");
       return;
     }
 
+    this.newPassword = this.passwordForm.get('newPassword')?.value || '';
+    this.confirmNewPassword = this.passwordForm.get('confirmNewPassword')?.value || '';
+
     const adminId = this.authService.getUserId();
+
     if (adminId) {
       const newPasswordData = { newPassword: this.newPassword };
       const headers = { 'Content-Type': 'application/json' };
+
       this.http.put(`https://localhost:5001/api/account/admin/password/${adminId}`, newPasswordData, { headers }).subscribe(
         () => {
           console.log('Admin password updated successfully');
           this.errorMessage = '';
           alert('Admin password updated successfully.');
-          this.newPassword = '';
-          this.confirmNewPassword = '';
+
+          this.passwordForm.reset();
           this.closePasswordModal();
         },
         (error: HttpErrorResponse) => {
@@ -158,7 +163,6 @@ export class UserConfigComponent implements OnInit {
       this.errorMessage = 'Admin ID is not available.';
     }
   }
-
 
   fetchUsers(): void {
     this.loginAndRegisterService.getUsers().subscribe(
@@ -241,7 +245,7 @@ export class UserConfigComponent implements OnInit {
     this.http.get<User>(`https://localhost:5001/api/account/${userId}`).subscribe(
       (user: User) => {
         this.user = user;
-        this.updateUser = { ...user,password:'' };
+        this.updateUser = { ...user, password: '' };
       },
       (error) => {
         console.error('Error fetching user details:', error);
