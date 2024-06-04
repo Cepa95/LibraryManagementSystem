@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../shared/models/user';
-import { NgForm,FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginAndRegisterService } from '../login-and-register.service';
 import { Observable } from 'rxjs';
 
@@ -29,6 +29,8 @@ export class UserConfigComponent implements OnInit {
   isPasswordModalOpen: boolean = false;
   newPassword: string = '';
   confirmNewPassword: string = '';
+  passwordForm: FormGroup;
+  passwordPattern: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
   constructor(
     private authService: AuthService,
@@ -36,7 +38,12 @@ export class UserConfigComponent implements OnInit {
     private http: HttpClient,
     private loginAndRegisterService: LoginAndRegisterService,
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+    this.passwordForm = this.formBuilder.group({
+      newPassword: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
+      confirmNewPassword: ['', [Validators.required]]
+    }, { validator: this.passwordMatchValidator });
+  }
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
@@ -45,6 +52,11 @@ export class UserConfigComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+
+
+    this.updateUser = {
+      password: ''
+    };
 
     const userRole = this.authService.getUserRole();
     this.isAdmin = userRole === 'Admin';
@@ -68,7 +80,11 @@ export class UserConfigComponent implements OnInit {
       confirmNewPassword: ['', Validators.required]
     });
   }
-
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmNewPassword = form.get('confirmNewPassword')?.value;
+    return newPassword === confirmNewPassword ? null : { 'mismatch': true };
+  }
   fetchAllUsers(loggedInAdminId: number): void {
     console.log('Fetching all users...');
     this.http.get<User[]>('https://localhost:5001/api/account').subscribe(
@@ -102,10 +118,10 @@ export class UserConfigComponent implements OnInit {
     this.isModalOpen = false;
   }
 
-openPasswordModal() {
-  console.log('Open password modal triggered'); // Add this line
-  this.isPasswordModalOpen = true;
-}
+  openPasswordModal() {
+    console.log('Open password modal triggered'); // Add this line
+    this.isPasswordModalOpen = true;
+  }
 
   closePasswordModal(): void {
     this.isPasswordModalOpen = false;
@@ -114,22 +130,27 @@ openPasswordModal() {
   }
 
   updateAdminPassword(): void {
-    if (this.newPassword !== this.confirmNewPassword) {
-      console.log("Passwords do not match.");
+    if (this.passwordForm.invalid) {
+      console.log("Form is invalid.");
       return;
     }
-  
+
+    this.newPassword = this.passwordForm.get('newPassword')?.value || '';
+    this.confirmNewPassword = this.passwordForm.get('confirmNewPassword')?.value || '';
+
     const adminId = this.authService.getUserId();
+
     if (adminId) {
       const newPasswordData = { newPassword: this.newPassword };
       const headers = { 'Content-Type': 'application/json' };
+
       this.http.put(`https://localhost:5001/api/account/admin/password/${adminId}`, newPasswordData, { headers }).subscribe(
         () => {
           console.log('Admin password updated successfully');
           this.errorMessage = '';
           alert('Admin password updated successfully.');
-          this.newPassword = '';
-          this.confirmNewPassword = '';
+
+          this.passwordForm.reset();
           this.closePasswordModal();
         },
         (error: HttpErrorResponse) => {
@@ -142,7 +163,6 @@ openPasswordModal() {
       this.errorMessage = 'Admin ID is not available.';
     }
   }
-  
 
   fetchUsers(): void {
     this.loginAndRegisterService.getUsers().subscribe(
@@ -225,7 +245,7 @@ openPasswordModal() {
     this.http.get<User>(`https://localhost:5001/api/account/${userId}`).subscribe(
       (user: User) => {
         this.user = user;
-        this.updateUser = { ...user };
+        this.updateUser = { ...user, password: '' };
       },
       (error) => {
         console.error('Error fetching user details:', error);
@@ -285,11 +305,11 @@ openPasswordModal() {
 
   userSelfDelete(): void {
     const userId = this.authService.getUserId();
-  
+
     if (userId) {
       // Display confirmation alert
       const confirmation = confirm('Are you sure you want to delete your account?');
-  
+
       if (confirmation) {
         // User confirmed deletion, proceed with deletion
         alert("Step 1 , deleting data");
@@ -318,16 +338,16 @@ openPasswordModal() {
       this.errorMessage = 'User ID is not available.';
     }
   }
-  
-  
+
+
 
   confirmUserDelete(): void {
     const userId = this.authService.getUserId();
-  
+
     if (userId) {
       // Display confirmation window pop-up
       const confirmation = window.confirm('Are you sure you want to delete your account?');
-  
+
       if (confirmation) {
         // User confirmed deletion, proceed with deletion
         this.loginAndRegisterService.deleteUser(userId).subscribe(
@@ -355,5 +375,5 @@ openPasswordModal() {
       this.errorMessage = 'User ID is not available.';
     }
   }
-  
+
 }  

@@ -41,7 +41,7 @@ export class AuthService {
         this.isLoggedIn.emit(false);
         alert("User logged out");
         console.log('Logout successful, token removed.');
-        // this.router.navigate(['account/login']);
+        this.router.navigate(['account/login']);
       })
     );
   }  
