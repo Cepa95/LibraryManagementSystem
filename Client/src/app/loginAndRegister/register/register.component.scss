@@ -18,6 +18,20 @@ body {
     font-family: Mulish, sans-serif;
 }
 
+.register-welcome {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.register-welcome-row {
+    display: flex;
+    width: 100%;
+    flex-direction:column;
+    gap: 0.5rem;
+    align-items: center;
+}
 .socials-row {
     display: flex;
     gap: 1rem;
@@ -209,6 +223,14 @@ body {
     text-decoration: underline;
 }
 
+.text-field {
+    border: #1D1D1D;
+    display:contents;
+    width: 100%;
+    flex-direction: column;
+    align-items:center;
+}
+
 .text-field input {
     color: var(--secondary);
     font-size: 1rem;
@@ -216,26 +238,17 @@ body {
     max-width: 100%;
     width: 100%;
     border: 1px solid var(--secondary);
-    height: 3rem;
+    height: 3.125rem;
     letter-spacing: .03rem;
     background-color: transparent;
     outline: none;
     transition: .25s;
     border-radius: 0.5rem;
-    text-indent: 1.5rem;
-    margin-top: 0.25rem;
+    border-color: #1D1D1D;
+    text-indent: 1.25rem;
+    margin-top: 0.5rem;
 }
-
-.text-field label:focus-within {
-    color: var(--primary);
-}
-
-.text-field {
-    position: relative;
-    border: #1D1D1D;
-}
-
-.text-field svg {
+.text-field img {
     position: absolute;
     right: -0.125rem;
     bottom: -0.25rem;
@@ -245,12 +258,9 @@ body {
     transform-origin: center;
     border: #1D1D1D;
 }
-
 .text-field input:focus {
-    border: 1px solid var(--primary);
-    border: #1D1D1D;
+    border: 0.0625rem solid black;
 }
-
 
 .text-field input:focus+svg {
     stroke: var(--primary);
@@ -276,13 +286,6 @@ body {
         flex-direction: column-reverse;
         padding: 3rem 3rem 3rem 2rem;
     }
-}
-.text-field {
-    margin-bottom: 1rem; /* Add margin between fields */
-}
-
-.text-field:last-child {
-    margin-bottom: 2rem; /* Add larger margin to the last field */
 }
 
 .date-of-birth-fields {
