@@ -1,20 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { LoanService } from '../../loanComponent/loan/loan.service';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Loan } from '../../shared/models/loan'; 
 @Component({
   selector: 'app-loan',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './loan.component.html',
   styleUrl: './loan.component.scss'
 })
-export class LoanComponent{}
-// export class LoanComponent implements OnInit {
-//   loanedBooks: number[] = [];
+// export class LoanComponent{}
+export class LoanComponent implements OnInit {
+  loanedBooks: number[] = [];
 
-//   constructor(private loanService: LoanService) {}
+  constructor(private loanService: LoanService) {}
 
-//   ngOnInit(): void {
-//     this.loanedBooks = this.loanService.getLoan();
-//   }
-// }
+  ngOnInit(): void {
+    this.fetchLoans();
+  }
+
+  fetchLoans(): void {
+    this.loanService.getLoans().subscribe((loans: Loan[]) => {
+      this.loanedBooks = loans.map(loan => loan.Id);
+    }, (error) => {
+      console.error('Failed to fetch loans:', error);
+    });
+  }
+}
 

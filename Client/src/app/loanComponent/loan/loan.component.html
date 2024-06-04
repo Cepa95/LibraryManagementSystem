@@ -1,11 +1,10 @@
-<p>loan works!</p>
+
 <div class="container">
     <h2>Loaned Books</h2>
     <div *ngIf="loanedBooks.length > 0; else noBooks">
       <div *ngFor="let bookId of loanedBooks" class="card mb-4 box-shadow">
         <div class="card-body">
           <h4 class="card-title">Book ID: {{ bookId }}</h4>
-          <!-- Here you could fetch and display more book details if needed -->
         </div>
       </div>
     </div>

@@ -11,10 +11,10 @@ export class LoanService {
   constructor(private http: HttpClient) { }
   private cart: number[] = [];
   addLoan(id: number): Observable<Loan>{
-    return this.http.post<Loan>(`${this.baseUrl}loan/add`, {BookId: id });
+    return this.http.post<Loan>(`${this.baseUrl}loan`, {BookId: id });
   }
 
-  getLoan(){
-    
+getLoans(): Observable<Loan[]> {
+    return this.http.get<Loan[]>(this.baseUrl);
   }
 }
