@@ -36,12 +36,13 @@
       <li class="nav-item">
         <a
           class="nav-link"
-          href="#"
+          [routerLink]="['/about']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           >About</a
         >
       </li>
+      
     </ul>
   </div>
   <div class="navbar-collapse justify-content-end">
@@ -58,6 +59,5 @@
     </ng-template>
     <!-- End of conditional rendering -->
   </div>
-  
 </nav>
 
