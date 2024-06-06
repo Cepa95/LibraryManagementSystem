@@ -24,13 +24,26 @@ export class BookItemComponent {
     private router: Router
   ) {}
 
-  loanBook(bookId: number){
-    this.loanService.addLoan(bookId).subscribe(() => {
-      console.log('Book added to loan successfully');
-      this.router.navigate(['/loan']);
-    }, (error) => {
-    console.error('Failed to add book to loan:', error);  
-    });
+  loanBook(bookId: number) {
+    const loanDate = new Date().toISOString();
+    const returnDate = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString();
+
+    this.loanService.addLoan({ bookId, loanDate, returnDate }).subscribe(
+      response => {
+        console.log('Book loaned successfully:', response);
+        this.router.navigate(['/loan']);
+      },
+      error => {
+        console.error('Failed to loan book:', error);
+        if (error.status === 400) {
+          console.error('Invalid input.');
+        } else if (error.status === 500) {
+          console.error('Internal server error. Please try again later.');
+        } else {
+          console.error(`Unexpected error: ${error.status} - ${error.message}`);
+        }
+      }
+    );
   }
 
   deleteBook(id: number) {
