@@ -5,6 +5,7 @@ import { Book } from '../shared/models/book';
 import { Publisher } from '../shared/models/publisher';
 import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,21 @@ export class LibraryService {
 
   getCategories() {
     return this.http.get<Category[]>(this.baseUrl + 'category');
+  }
+  getRecommendationsForBook(book: Book, libraryParams: LibraryParams): Observable<Book[]> {
+    // Retrieve the category name of the current book
+    const currentCategory = book.category;
+
+    // Call the API to get all books
+    return this.getBooks(libraryParams).pipe(
+      map((pagination) => {
+        // Extract the array of books from the pagination object
+        const books = pagination.data;
+
+        // Filter the books based on category
+        return books.filter((item) => item.category === currentCategory);
+      })
+    );
   }
 
   addBook(book: Book) {

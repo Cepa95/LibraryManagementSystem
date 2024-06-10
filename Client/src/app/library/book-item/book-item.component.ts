@@ -18,8 +18,9 @@ export class BookItemComponent {
   constructor(
     private modalService: BsModalService,
     private libraryService: LibraryService,
-    private authService:AuthService
-  ) {}
+    private authService: AuthService,
+
+  ) { }
 
   deleteBook(id: number) {
     if (this.book) {
@@ -46,6 +47,7 @@ export class BookItemComponent {
       console.error('Book ID is undefined');
     }
   }
+
   isAdmin(): boolean {
     return this.authService.getUserRole() === 'Admin';
   }
