@@ -2,9 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pagination } from '../shared/models/pagination';
 import { Book } from '../shared/models/book';
+import { Author } from '../shared/models/author';
 import { Publisher } from '../shared/models/publisher';
 import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import { AuthorBook } from '../shared/models/authorBook';
 
 @Injectable({
   providedIn: 'root',
@@ -50,10 +53,40 @@ export class LibraryService {
   getCategories() {
     return this.http.get<Category[]>(this.baseUrl + 'category');
   }
+  getRecommendationsForBook(book: Book, libraryParams: LibraryParams): Observable<Book[]> {
+    // Retrieve the category name of the current book
+    const currentCategory = book.category;
+
+    // Call the API to get all books
+    return this.getBooks(libraryParams).pipe(
+      map((pagination) => {
+        // Extract the array of books from the pagination object
+        const books = pagination.data;
+
+        // Filter the books based on category
+        return books.filter((item) => item.category === currentCategory);
+      })
+    );
+  }
 
   addBook(book: Book) {
     return this.http.post(this.baseUrl + 'book', book);
   }
+  getAuthors(): Observable<Author[]> {
+    return this.http.get<Author[]>(this.baseUrl + 'author');
+  }
 
+  getBooksByAuthor(authorId: number): Observable<Book[]> {
+    return this.getAuthorBooks().pipe(
+      map(authorBooks => authorBooks.filter(ab => ab.authorId === authorId)),
+      switchMap(authorBooks => {
+        const bookObservables = authorBooks.map(ab => this.getBook(ab.bookId));
+        return forkJoin(bookObservables);
+      })
+    );
+  }
   
+  getAuthorBooks(): Observable<AuthorBook[]> {
+    return this.http.get<AuthorBook[]>(this.baseUrl + 'authorBook');
+  }
 }

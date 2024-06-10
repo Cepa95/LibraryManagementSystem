@@ -1,17 +1,10 @@
 <div class="container my-5" *ngIf="book">
   <div class="row">
     <div class="col-lg-6 text-center">
-      <img
-        src="{{ book.imageUrl }}"
-        alt="{{ book.title }}"
-        class="img-fluid smaller-image"
-      />
+      <img src="{{ book.imageUrl }}" alt="{{ book.title }}" class="img-fluid smaller-image" />
     </div>
     <div class="col-lg-6 mt-5">
-      <h2 class="bigger-element">
-        {{ book.title }}
-      </h2>
-
+      <h2 class="bigger-element">{{ book.title }}</h2>
       <p class="fs-5 mb-4">Category: {{ book.category }}</p>
       <p class="fs-5 mb-4">Publisher: {{ book.publisher }}</p>
       <p class="fs-5 mb-4">Pages: {{ book.pages }}</p>
@@ -21,6 +14,61 @@
         <div class="col">
           <h4 class="fw-bold mb-3">Description</h4>
           <p>{{ book.description }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <br /><br />
+      <h3>Recommendations</h3>
+      <br /><br />
+      <div class="row">
+        <!-- Recommendations by category -->
+        <div class="col-md-6 category-recommendations">
+          <div *ngIf="categoryRecommendations.length > 0">
+            <h4>Books with the same category:</h4>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let recommendation of categoryRecommendations | slice:0:2">
+                <div class="card mb-4 box-shadow">
+                  <img src="{{ recommendation.imageUrl }}" alt="{{ recommendation.title }}" class="card-img-top" />
+                  <div class="card-body">
+                    <h5 class="card-title">{{ recommendation.title }}</h5>
+                    <p class="card-text">Category: {{ recommendation.category }}</p>
+                    <p class="card-text">Publisher: {{ recommendation.publisher }}</p>
+                    <p class="card-text">Pages: {{ recommendation.pages }}</p>
+                    <p class="card-text">Copies: {{ recommendation.numberOfCopies }}</p>
+                    <button class="btn btn-primary" (click)="viewBook(recommendation.id)">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="categoryRecommendations.length === 0">
+            <p>No recommendations found for this book's category.</p>
+          </div>
+        </div>
+        <!-- Recommendations by author -->
+        <div class="col-md-6 author-recommendations">
+          <div *ngIf="authorRecommendations.length > 0">
+            <h4>Books by the same author:</h4>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let recommendation of authorRecommendations | slice:0:2">
+                <div class="card mb-4 box-shadow">
+                  <img src="{{ recommendation.imageUrl }}" alt="{{ recommendation.title }}" class="card-img-top" />
+                  <div class="card-body">
+                    <h5 class="card-title">{{ recommendation.title }}</h5>
+                    <p class="card-text">Category: {{ recommendation.category }}</p>
+                    <p class="card-text">Publisher: {{ recommendation.publisher }}</p>
+                    <p class="card-text">Pages: {{ recommendation.pages }}</p>
+                    <p class="card-text">Copies: {{ recommendation.numberOfCopies }}</p>
+                    <button class="btn btn-primary" (click)="viewBook(recommendation.id)">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="authorRecommendations.length === 0">
+            <p>No recommendations found for this book's author.</p>
+          </div>
         </div>
       </div>
     </div>
