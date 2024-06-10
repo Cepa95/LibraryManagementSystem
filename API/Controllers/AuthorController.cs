@@ -26,14 +26,14 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-           [HttpGet]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IReadOnlyList<AuthorDto>>> GetAuthorsAsync()
         {
             _logger.LogInformation("Getting all Authors");
 
-           
+
             var authors = await _AuthorRepository.ListAllAsync();
 
             if (authors == null) return NotFound(new ApiResponse(404, "Authors are not found"));
@@ -108,5 +108,6 @@ namespace API.Controllers
             await _unitOfWork.Complete();
 
             return Ok(_mapper.Map<AuthorDto>(author));
-        }}
+        }
+    }
 }

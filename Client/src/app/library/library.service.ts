@@ -2,10 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pagination } from '../shared/models/pagination';
 import { Book } from '../shared/models/book';
+import { Author } from '../shared/models/author';
 import { Publisher } from '../shared/models/publisher';
 import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
-import { Observable, map } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import { AuthorBook } from '../shared/models/authorBook';
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +72,21 @@ export class LibraryService {
   addBook(book: Book) {
     return this.http.post(this.baseUrl + 'book', book);
   }
+  getAuthors(): Observable<Author[]> {
+    return this.http.get<Author[]>(this.baseUrl + 'author');
+  }
 
+  getBooksByAuthor(authorId: number): Observable<Book[]> {
+    return this.getAuthorBooks().pipe(
+      map(authorBooks => authorBooks.filter(ab => ab.authorId === authorId)),
+      switchMap(authorBooks => {
+        const bookObservables = authorBooks.map(ab => this.getBook(ab.bookId));
+        return forkJoin(bookObservables);
+      })
+    );
+  }
   
+  getAuthorBooks(): Observable<AuthorBook[]> {
+    return this.http.get<AuthorBook[]>(this.baseUrl + 'authorBook');
+  }
 }

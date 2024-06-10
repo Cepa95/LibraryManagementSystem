@@ -12,7 +12,8 @@ import { LibraryParams } from '../shared/models/libraryParams';
 })
 export class BookDetailsComponent implements OnInit {
   book?: Book;
-  recommendations: Book[] = [];
+  categoryRecommendations: Book[] = [];
+  authorRecommendations: Book[] = [];
 
   constructor(private libraryService: LibraryService,
      private activatedRoute: ActivatedRoute,
@@ -30,7 +31,8 @@ export class BookDetailsComponent implements OnInit {
         next: book => {
           this.book = book;
           // Load recommendations after loading the book
-          this.loadRecommendations();
+          this.loadByCategoryRecommendations();
+          this.loadByAuthorRecommendations();
         },
         error: err => console.log(err)
       });
@@ -41,7 +43,8 @@ export class BookDetailsComponent implements OnInit {
     this.libraryService.getBook(bookId).subscribe({
       next: book => {
         this.book = book;
-        this.loadRecommendations(); // Load recommendations for the new book
+        this.loadByCategoryRecommendations();
+        this.loadByAuthorRecommendations(); // Load recommendations for the new book
         this.router.navigate(['/library/', bookId]);
       },
       error: err => console.log(err)
@@ -49,7 +52,35 @@ export class BookDetailsComponent implements OnInit {
   }
   
 
-  loadRecommendations() {
+  
+  loadByAuthorRecommendations() {
+    if (this.book && this.book.id) {
+      this.libraryService.getAuthorBooks().subscribe({
+        next: authorBooks => {
+          console.log('Author Books:', authorBooks); // Log author books data
+          const authorBook = authorBooks.find(ab => ab.bookId === this.book!.id);
+          if (authorBook) {
+            console.log('Author ID found:', authorBook.authorId); // Log author ID
+            this.libraryService.getBooksByAuthor(authorBook.authorId).subscribe({
+              next: recommendations => {
+                console.log('Author Recommendations:', recommendations); // Log recommendations
+                this.authorRecommendations = recommendations.filter(recommendation => recommendation.id !== this.book!.id);
+              },
+              error: err => console.log(err)
+            });
+          } else {
+            console.log('Author ID not found for the book:', this.book?.title);
+          }
+        },
+        error: err => console.log(err)
+      });
+    } else {
+      console.log('Book ID not found.');
+    }
+  }
+  
+  
+  loadByCategoryRecommendations() {
     if (this.book && this.book.category) {
       this.libraryService.getCategories().subscribe({
         next: categories => {
@@ -57,19 +88,16 @@ export class BookDetailsComponent implements OnInit {
           if (category) {
             const libraryParams: LibraryParams = new LibraryParams();
             libraryParams.categoryId = category.id;
-            // Check if this.book is not undefined before calling getRecommendationsForBook
-            if (this.book) {
-              this.libraryService.getRecommendationsForBook(this.book, libraryParams).subscribe({
-                next: recommendations => {
-                  this.recommendations = recommendations;
-                  // Filter out the current book from recommendations
-                  this.recommendations = this.recommendations.filter(recommendation => recommendation.id !== this.book!.id);
-                },
-                error: err => console.log(err)
-              });
-            }
+            this.libraryService.getRecommendationsForBook(this.book!, libraryParams).subscribe({
+              next: recommendations => {
+                this.categoryRecommendations = recommendations;
+                // Filter out the current book from recommendations
+                this.categoryRecommendations = this.categoryRecommendations.filter(recommendation => recommendation.id !== this.book!.id);
+              },
+              error: err => console.log(err)
+            });
           } else {
-            console.log('Category not found for book:', this.book!.category);
+            console.log('Category not found for book:', this.book?.category);
           }
         },
         error: err => console.log(err)
