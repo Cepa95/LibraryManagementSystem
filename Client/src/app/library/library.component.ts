@@ -6,6 +6,7 @@ import { Category } from '../shared/models/category';
 import { LibraryParams } from '../shared/models/libraryParams';
 import { Subject, debounceTime } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
+import { Author } from '../shared/models/author';
 
 @Component({
   selector: 'app-library',
@@ -17,7 +18,9 @@ export class LibraryComponent implements OnInit {
   isAdmin: boolean = false;
   books: Book[] = [];
   publishers: Publisher[] = [];
+  authors: Author[] = [];
   categories: Category[] = [];
+  selectedAuthorId?: number;
   libraryParams = new LibraryParams();
   sortOptions = [
     { name: 'Alphabetical: A to Z', value: 'titleAsc' },
@@ -43,8 +46,9 @@ export class LibraryComponent implements OnInit {
     this.getBooks();
     this.getPublishers();
     this.getCategories();
+    this.getAuthors();
   }
-  
+
   checkAdminStatus() {
     const userRole = this.authService.getUserRole();
     this.isAdmin = userRole === 'Admin';
@@ -78,6 +82,14 @@ export class LibraryComponent implements OnInit {
     });
   }
 
+  getAuthors() {
+    this.libraryService.getAuthors().subscribe({
+      next: (response: any) =>
+        (this.authors = [{ id: 0, firstName: 'All'}, ...response]),
+      error: (error: any) => console.log(error),
+    });
+  }
+
   onCategorySelected(event: any) {
     this.libraryParams.categoryId = +event.target.value;
     this.libraryParams.pageNumber = 1;
@@ -88,6 +100,23 @@ export class LibraryComponent implements OnInit {
     this.libraryParams.publisherId = publisherId;
     this.libraryParams.pageNumber = 1;
     this.getBooks();
+  }
+  
+  onAuthorSelected(author: Author) {
+    this.selectedAuthorId = author.id;
+    this.libraryParams.pageNumber = 1; // Reset to the first page
+
+    if (author.firstName === 'All') {
+      this.getBooks();
+    } else {
+      this.libraryService.getBooksByAuthor(author.id).subscribe({
+        next: (response) => {
+          this.books = response;
+          this.totalCount = response.length;
+        },
+        error: (error) => console.log(error),
+      });
+    }
   }
 
   onSortSelected(event: any) {

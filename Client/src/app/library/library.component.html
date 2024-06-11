@@ -26,6 +26,20 @@
           {{ publisher.name }}
         </li>
       </ul>
+
+      <h5 class="text-warning ms-3">Authors</h5>
+      <ul class="list-group my-3">
+        <li
+          class="list-group-item"
+          *ngFor="let author of authors"
+          [class.active]="author.id === selectedAuthorId"
+          [value]="author.id"
+          (click)="onAuthorSelected(author)"
+        >
+          {{ author.firstName }} {{ author.lastName }}
+        </li>
+      </ul>
+      
     </section>
     
     <section class="col-12 col-md-9 order-2">
@@ -55,9 +69,7 @@
             Reset
           </button>
         </div>
-    
       </div>
-      
 
       <div class="row">
         <div class="col-12 col-sm-6 col-md-4" *ngFor="let book of books">
