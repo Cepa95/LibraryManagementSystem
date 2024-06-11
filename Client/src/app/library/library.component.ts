@@ -97,11 +97,12 @@ export class LibraryComponent implements OnInit {
   }
 
   onPublisherSelected(publisherId: number) {
+    this.selectedAuthorId = undefined; // Reset selected author when changing publisher
     this.libraryParams.publisherId = publisherId;
     this.libraryParams.pageNumber = 1;
     this.getBooks();
   }
-  
+
   onAuthorSelected(author: Author) {
     this.selectedAuthorId = author.id;
     this.libraryParams.pageNumber = 1; // Reset to the first page
@@ -109,6 +110,7 @@ export class LibraryComponent implements OnInit {
     if (author.firstName === 'All') {
       this.getBooks();
     } else {
+      this.libraryParams.publisherId = 0;
       this.libraryService.getBooksByAuthor(author.id).subscribe({
         next: (response) => {
           this.books = response;
