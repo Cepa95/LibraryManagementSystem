@@ -27,10 +27,16 @@ export class BookItemComponent {
   ) {}
 
   loanBook(bookId: number) {
+    const userId = this.authService.getUserId();
+  
+  if (!userId) {
+    console.error('User is not authenticated');
+    return;
+  }
     const loanDate = new Date().toISOString();
     const returnDate = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString();
 
-    this.loanService.addLoan({ bookId, loanDate, returnDate }).subscribe(
+    this.loanService.addLoan({ bookId, userId, loanDate, returnDate }).subscribe(
       response => {
         console.log('Book loaned successfully:', response);
         this.router.navigate(['/loan']);

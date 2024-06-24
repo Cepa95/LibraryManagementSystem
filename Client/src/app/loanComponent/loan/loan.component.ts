@@ -8,7 +8,7 @@ import { Loan } from '../../shared/models/loan';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './loan.component.html',
-  styleUrl: './loan.component.scss'
+  styleUrls: ['./loan.component.scss']
 })
 // export class LoanComponent{}
 export class LoanComponent implements OnInit {
@@ -22,7 +22,7 @@ export class LoanComponent implements OnInit {
 
   fetchLoans(): void {
     this.loanService.getLoans().subscribe((loans: Loan[]) => {
-      this.loanedBooks = loans.map(loan => loan.Id);
+      this.loanedBooks = loans.map(loan => loan.Book);
     }, (error) => {
       console.error('Failed to fetch loans:', error);
     });

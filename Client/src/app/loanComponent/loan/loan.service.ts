@@ -10,10 +10,10 @@ export class LoanService {
   private baseUrl = 'https://localhost:5001/api/';
   constructor(private http: HttpClient) { }
   private cart: number[] = [];
-  addLoan(loanData: { bookId: number; loanDate: string; returnDate: string }): Observable<Loan> {
+  addLoan(loanData: { bookId: number; userId: number; loanDate: string; returnDate: string }): Observable<Loan> {
     return this.http.post<Loan>(`${this.baseUrl}loan`, loanData);
   }
   getLoans(): Observable<Loan[]> {
-    return this.http.get<Loan[]>(this.baseUrl);
+    return this.http.get<Loan[]>(`${this.baseUrl}loans`); 
   }
 }
