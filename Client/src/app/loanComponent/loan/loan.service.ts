@@ -13,7 +13,7 @@ export class LoanService {
   addLoan(loanData: { bookId: number; userId: number; loanDate: string; returnDate: string }): Observable<Loan> {
     return this.http.post<Loan>(`${this.baseUrl}loan`, loanData);
   }
-  getLoans(): Observable<Loan[]> {
+  getUserLoans(userId: number): Observable<Loan[]> {
     return this.http.get<Loan[]>(`${this.baseUrl}loans`); 
   }
 }

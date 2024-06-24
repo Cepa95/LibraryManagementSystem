@@ -3,6 +3,7 @@ import { LoanService } from '../../loanComponent/loan/loan.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Loan } from '../../shared/models/loan'; 
+import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-loan',
   standalone: true,
@@ -12,20 +13,28 @@ import { Loan } from '../../shared/models/loan';
 })
 // export class LoanComponent{}
 export class LoanComponent implements OnInit {
-  loanedBooks: number[] = [];
+  loanedBooks: Loan[] = [];
 
-  constructor(private loanService: LoanService) {}
+  constructor(private loanService: LoanService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.fetchLoans();
+    this.fetchUserLoans();
   }
 
-  fetchLoans(): void {
-    this.loanService.getLoans().subscribe((loans: Loan[]) => {
-      this.loanedBooks = loans.map(loan => loan.Book);
-    }, (error) => {
-      console.error('Failed to fetch loans:', error);
-    });
+  fetchUserLoans(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loanService.getUserLoans(userId).subscribe(
+        (loans: Loan[]) => {
+          this.loanedBooks = loans;
+        },
+        (error) => {
+          console.error('Failed to fetch user loans:', error);
+        }
+      );
+    } else {
+      console.error('User is not logged in.');
+    }
   }
 }
 

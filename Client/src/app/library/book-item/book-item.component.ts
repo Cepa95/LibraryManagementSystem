@@ -27,31 +27,30 @@ export class BookItemComponent {
   ) {}
 
   loanBook(bookId: number) {
-    const userId = this.authService.getUserId();
-  
-  if (!userId) {
-    console.error('User is not authenticated');
-    return;
-  }
     const loanDate = new Date().toISOString();
     const returnDate = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString();
-
-    this.loanService.addLoan({ bookId, userId, loanDate, returnDate }).subscribe(
-      response => {
-        console.log('Book loaned successfully:', response);
-        this.router.navigate(['/loan']);
-      },
-      error => {
-        console.error('Failed to loan book:', error);
-        if (error.status === 400) {
-          console.error('Invalid input.');
-        } else if (error.status === 500) {
-          console.error('Internal server error. Please try again later.');
-        } else {
-          console.error(`Unexpected error: ${error.status} - ${error.message}`);
+    const userId = this.authService.getUserId();  // Get the current user's ID
+  
+    if (userId) {
+      this.loanService.addLoan({ bookId, userId, loanDate, returnDate }).subscribe(
+        response => {
+          console.log('Book loaned successfully:', response);
+          this.router.navigate(['/loan']);
+        },
+        error => {
+          console.error('Failed to loan book:', error);
+          if (error.status === 400) {
+            console.error('Invalid input.');
+          } else if (error.status === 500) {
+            console.error('Internal server error. Please try again later.');
+          } else {
+            console.error(`Unexpected error: ${error.status} - ${error.message}`);
+          }
         }
-      }
-    );
+      );
+    } else {
+      console.error('User is not logged in.');
+    }
   }
 
   deleteBook(id: number) {
