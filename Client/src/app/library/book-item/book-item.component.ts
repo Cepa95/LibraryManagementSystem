@@ -21,7 +21,7 @@ export class BookItemComponent {
   constructor(
     private modalService: BsModalService,
     private libraryService: LibraryService,
-    private authService:AuthService,
+    protected authService:AuthService,
     private loanService: LoanService,
     private router: Router
   ) {}
@@ -75,8 +75,5 @@ export class BookItemComponent {
     } else {
       console.error('Book ID is undefined');
     }
-  }
-  isAdmin(): boolean {
-    return this.authService.getUserRole() === 'Admin';
   }
 }

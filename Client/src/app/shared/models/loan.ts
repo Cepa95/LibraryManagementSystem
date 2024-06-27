@@ -1,8 +1,11 @@
+import { Book } from "./book";
+import { User } from "./user";
+
 export interface Loan {
-    Id: number;
-    BorrowedDate: Date;
-    ReturnedDate: Date;
-    NumberOfBorrowedBooks: number;
-    User: number;
-    Book: number;
+    id: number;
+    borrowedDate: Date;
+    returnedDate: Date;
+    numberOfBorrowedBooks: number;
+    user: User;
+    book: Book;
   }

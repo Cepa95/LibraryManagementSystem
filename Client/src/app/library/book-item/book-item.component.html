@@ -1,5 +1,5 @@
 <div class="card mb-4 box-shadow" *ngIf="book">
-  <div class="btn-group" *ngIf="isAdmin()">
+  <div class="btn-group" *ngIf="authService.isAdmin">
     <button [routerLink]="['/library/update', book.id]" class="btn btn-primary">Update</button>
     <button class="btn btn-danger" (click)="openModal(deleteTemplate)">Delete</button>
   </div>

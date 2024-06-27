@@ -15,7 +15,6 @@ import { Observable } from 'rxjs';
 export class UserConfigComponent implements OnInit {
   @ViewChild('userForm', { static: false }) userForm!: NgForm;
   form!: FormGroup;
-  isAdmin: boolean = false;
   user: User | undefined;
   updateUser: Partial<User> = {};
   errorMessage: string = '';
@@ -33,7 +32,7 @@ export class UserConfigComponent implements OnInit {
   passwordPattern: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
   constructor(
-    private authService: AuthService,
+    protected authService: AuthService,
     private router: Router,
     private http: HttpClient,
     private loginAndRegisterService: LoginAndRegisterService,
@@ -57,10 +56,6 @@ export class UserConfigComponent implements OnInit {
     this.updateUser = {
       password: ''
     };
-
-    const userRole = this.authService.getUserRole();
-    this.isAdmin = userRole === 'Admin';
-    console.log('User Role:', userRole);
 
     const userId = this.authService.getUserId();
     console.log('Retrieved User ID:', userId);

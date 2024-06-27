@@ -15,7 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class LoanComponent implements OnInit {
   loanedBooks: Loan[] = [];
 
-  constructor(private loanService: LoanService, private authService: AuthService) {}
+  constructor(private loanService: LoanService, protected authService: AuthService) {}
 
   ngOnInit(): void {
     this.fetchUserLoans();
@@ -26,6 +26,7 @@ export class LoanComponent implements OnInit {
     if (userId) {
       this.loanService.getUserLoans(userId).subscribe(
         (loans: Loan[]) => {
+          console.log(loans)
           this.loanedBooks = loans;
         },
         (error) => {
