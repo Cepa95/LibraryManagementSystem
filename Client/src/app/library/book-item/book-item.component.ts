@@ -27,12 +27,10 @@ export class BookItemComponent {
   ) {}
 
   loanBook(bookId: number) {
-    const loanDate = new Date().toISOString();
-    const returnDate = new Date(new Date().setDate(new Date().getDate() + 14)).toISOString();
     const userId = this.authService.getUserId();  // Get the current user's ID
   
     if (userId) {
-      this.loanService.addLoan({ bookId, userId, loanDate, returnDate }).subscribe(
+      this.loanService.addLoan({ bookId, userId }).subscribe(
         response => {
           console.log('Book loaned successfully:', response);
           this.router.navigate(['/loan']);

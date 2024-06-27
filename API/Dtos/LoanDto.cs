@@ -10,8 +10,8 @@ namespace API.Dtos
 
         public int NumberOfBorrowedBooks { get; set; }
 
-        public int User { get; set; }
+        public UserDto User { get; set; }
 
-        public int Book { get; set; }
+        public BookDto Book { get; set; }
     }
 }

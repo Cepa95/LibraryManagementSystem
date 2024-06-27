@@ -24,8 +24,8 @@ namespace API.Helpers
 
 
             CreateMap<Loan, LoanDto>()
-               .ForMember(d => d.User, o => o.MapFrom(s => s.User.Id))//
-               .ForMember(d => d.Book, o => o.MapFrom(s => s.Book.Title));
+               .ForMember(d => d.User, o => o.MapFrom(s => s.User))//map whole user not just id
+               .ForMember(d => d.Book, o => o.MapFrom(s => s.Book));
 
             CreateMap<LoanUpdateDto, Loan>().ReverseMap();
 

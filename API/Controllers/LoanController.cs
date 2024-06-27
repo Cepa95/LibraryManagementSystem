@@ -100,11 +100,16 @@ namespace API.Controllers
        
 
         [HttpPost]
-        public async Task<ActionResult<LoanUpdateDto>> CreateLaonAsync(LoanUpdateDto loanCreateDto)
+        public async Task<ActionResult<LoanUpdateDto>> CreateLoanAsync(LoanUpdateDto loanCreateDto)
         {
             _logger.LogInformation("Creating a new loan");
+            var borrowedDate = DateTimeOffset.UtcNow;
+            var returnedDate = borrowedDate.AddDays(14).UtcDateTime;
 
             var loan = _mapper.Map<Loan>(loanCreateDto);
+
+            loan.BorrowedDate = borrowedDate;
+            loan.ReturnedDate = returnedDate;
 
             _unitOfWork.Repository<Loan>().Add(loan);
             await _unitOfWork.Complete();
