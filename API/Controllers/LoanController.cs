@@ -6,6 +6,10 @@ using AutoMapper;
 using API.Dtos;
 using API.Errors;
 using API.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -30,34 +34,58 @@ namespace API.Controllers
         }
       
         
+        // [HttpGet]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        //  public async Task<ActionResult<IReadOnlyList<LoanDto>>> GetLoansAsync()
+        // {
+        //     _logger.LogInformation("Getting all loans");
+
+        //     var spec = new LoanSpecification();
+        //     var loans = await _loanRepository.ListAsync(spec);
+
+        //     if (loans == null) return NotFound(new ApiResponse(404, "Loans are not found"));
+
+        //     return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
+        // }
+   
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-         public async Task<ActionResult<IReadOnlyList<LoanDto>>> GetLoansAsync()
+        public async Task<ActionResult<Loan>> GetLoansByIdAsync([FromQuery] int? userId = null)
         {
-            _logger.LogInformation("Getting all loans");
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if(User.IsInRole("Admin"))
+            {
+                _logger.LogInformation("Admin: Getting all loans");
+              var loans = await _loanRepository.ListAllAsync();
+              return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
+            }
+            else
+            { 
+                if (!userId.HasValue || userId.ToString() != currentUserId)
+                {
+                    return BadRequest(new ApiResponse(400, "Invalid user id or insufficient permissions"));
+                }
 
-            var spec = new LoanSpecification();
-            var loans = await _loanRepository.ListAsync(spec);
+                _logger.LogInformation($"User: Getting loans for user id: {userId.Value}");
 
-            if (loans == null) return NotFound(new ApiResponse(404, "Loans are not found"));
+                var spec = new LoanSpecification(userId.Value);
+                var loans = await _loanRepository.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
-        }
-   
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Loan>> GetLoansByIdAsync(int id)
-        {
-             _logger.LogInformation($"Getting a loan under id: {id}");
+                if (loans == null || loans.Count == 0)
+                    return NotFound(new ApiResponse(404, "Loans are not found"));
 
-            var spec = new LoanSpecification(id);
-            var loan = await _loanRepository.GetEntityWithSpec(spec);
+                return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
+            }
+            //  logger.LogInformation($"Getting a loan under id: {userId}");
 
-            if (loan == null) return NotFound(new ApiResponse(404, $"Loan under id: {id} is not found"));
+            // var spec = new LoanSpecification(id);
+            // var loan = await _loanRepository.GetEntityWithSpec(spec);
 
-            return Ok(_mapper.Map<Loan, LoanDto>(loan));
+            // if (loan == null) return NotFound(new ApiResponse(404, $"Loan under Userid: {userId} is not found"));
+
+            // return Ok(_mapper.Map<Loan, LoanDto>(loan));_
         }
 
          [HttpDelete("{id}")]
