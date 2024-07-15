@@ -10,12 +10,19 @@ namespace Core.Specifications
             AddInclude(x => x.Book);
         }
 
-        public LoanSpecification(int id) : base(x => x.Id == id)
+        // public LoanSpecification(int loanId) : base(x => x.Id == loanId)
+        // {
+        //     AddInclude(x => x.User);
+        //     AddInclude(x => x.Book);
+        // }
+
+        // Constructor that takes user id (integer)
+        public LoanSpecification (int userId) : base(x => x.UserId == userId)
         {
             AddInclude(x => x.User);
             AddInclude(x => x.Book);
         }
-        
-
     }
+
+    
 }

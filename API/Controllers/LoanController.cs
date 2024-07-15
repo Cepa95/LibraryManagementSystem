@@ -45,19 +45,22 @@ namespace API.Controllers
             return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
         }
    
-        [HttpGet("{id}")]
+        [HttpGet("user/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Loan>> GetLoansByIdAsync(int id)
+        public async Task<ActionResult<IReadOnlyList<LoanDto>>> GetLoansByUserIdAsync(int userId)
         {
-             _logger.LogInformation($"Getting a loan under id: {id}");
+            _logger.LogInformation($"Getting loans for user with id: {userId}");
 
-            var spec = new LoanSpecification(id);
-            var loan = await _loanRepository.GetEntityWithSpec(spec);
+            var spec = new LoanSpecification(userId);
+            var loans = await _loanRepository.ListAsync(spec);
 
-            if (loan == null) return NotFound(new ApiResponse(404, $"Loan under id: {id} is not found"));
+            if (loans == null || loans.Count == 0)
+             {
+                 return NotFound(new ApiResponse(404, $"No loans found for user with id: {userId}"));
+            }
 
-            return Ok(_mapper.Map<Loan, LoanDto>(loan));
+            return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
         }
 
          [HttpDelete("{id}")]
