@@ -18,7 +18,28 @@ export class LoanComponent implements OnInit {
   constructor(private loanService: LoanService, protected authService: AuthService) {}
 
   ngOnInit(): void {
+    if(this.authService.isAdmin){
+      this.fetchLoans();
+
+    } else{
     this.fetchUserLoans();
+    }
+  }
+
+  fetchLoans(): void {
+    if (this.authService.isAdmin) {
+      this.loanService.getAllLoans().subscribe(
+        (loans: Loan[]) => {
+          console.log(loans);
+          this.loanedBooks = loans;
+        },
+        (error) => {
+          console.error('Failed to fetch all loans:', error);
+        }
+      );
+    } else {
+      this.fetchUserLoans();
+    }
   }
 
   fetchUserLoans(): void {
@@ -26,7 +47,7 @@ export class LoanComponent implements OnInit {
     if (userId) {
       this.loanService.getUserLoans(userId).subscribe(
         (loans: Loan[]) => {
-          console.log(loans)
+          console.log(loans);
           this.loanedBooks = loans;
         },
         (error) => {
