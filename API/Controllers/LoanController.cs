@@ -15,7 +15,7 @@ namespace API.Controllers
         private readonly ILogger<LoanController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-
+private const int MaxBooksAllowed = 5;
 
         public LoanController(IGenericRepository<Loan> loanRepository,
                               ILogger<LoanController> logger,
@@ -128,6 +128,20 @@ public async Task<ActionResult<Dictionary<int, int>>> GetUserLoanCountsAsync()
         public async Task<ActionResult<LoanUpdateDto>> CreateLoanAsync(LoanUpdateDto loanCreateDto)
         {
             _logger.LogInformation("Creating a new loan");
+
+// Fetch all loans for the user
+    var userLoansSpec = new LoanSpecification(loanCreateDto.UserId);
+    var userLoans = await _loanRepository.ListAsync(userLoansSpec);
+
+    // Count the number of active loans (i.e., those that haven't been returned yet)
+    var activeLoansCount = userLoans.Count(l => l.ReturnedDate == null);
+
+    // Check if the user has reached the borrowing limit
+    if (activeLoansCount >= MaxBooksAllowed)
+    {
+        return BadRequest(new ApiResponse(400, "User has reached the maximum number of borrowed books."));
+    }
+
             var borrowedDate = DateTimeOffset.UtcNow;
             var returnedDate = borrowedDate.AddDays(14).UtcDateTime;
 

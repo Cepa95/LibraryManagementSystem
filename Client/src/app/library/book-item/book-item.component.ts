@@ -17,6 +17,8 @@ export class BookItemComponent {
   @Input() book?: Book;
   @Output() bookDeleted = new EventEmitter();
   modalRef?: BsModalRef;
+  maxLoans: number = 6;
+  isLoanLimitExceeded: boolean = false;
 
   constructor(
     private modalService: BsModalService,
@@ -26,10 +28,32 @@ export class BookItemComponent {
     private router: Router
   ) {}
 
-  loanBook(bookId: number) {
-    const userId = this.authService.getUserId();  // Get the current user's ID
-  
+  ngOnInit() {
+    this.checkLoanLimit();
+  }
+
+  checkLoanLimit() {
+    const userId = this.authService.getUserId();
+
     if (userId) {
+      this.loanService.getUserLoanCounts().subscribe(
+        (counts: { [userId: number]: number }) => {
+          const currentLoanCount = counts[userId] || 0;
+          this.isLoanLimitExceeded = currentLoanCount >= this.maxLoans;
+        },
+        error => {
+          console.error('Failed to fetch user loan counts:', error);
+        }
+      );
+    } else {
+      console.error('User is not logged in.');
+    }
+  }
+
+  loanBook(bookId: number) {
+    const userId = this.authService.getUserId();
+
+    if (userId && !this.isLoanLimitExceeded) {
       this.loanService.addLoan({ bookId, userId }).subscribe(
         response => {
           console.log('Book loaned successfully:', response);
@@ -46,8 +70,6 @@ export class BookItemComponent {
           }
         }
       );
-    } else {
-      console.error('User is not logged in.');
     }
   }
 

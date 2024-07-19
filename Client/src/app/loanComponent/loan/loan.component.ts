@@ -70,5 +70,6 @@ export class LoanComponent implements OnInit {
       }
     );
   }
+  
 }
 

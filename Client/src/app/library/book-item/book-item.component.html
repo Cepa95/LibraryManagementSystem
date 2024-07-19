@@ -25,7 +25,14 @@
     </div>
     <div class="btn-group mt-auto d-flex justify-content-center">
       <button class="btn btn-sm btn-primary mr-2" routerLink="/library/{{book.id}}">View </button>
-      <button class="btn btn-sm btn-success" (click)="loanBook(book.id)">Loan</button>
+      <button 
+        class="btn btn-sm btn-success"
+        (click)="loanBook(book.id)"
+        [disabled]="isLoanLimitExceeded"
+        [ngClass]="{'btn-disabled': isLoanLimitExceeded}"
+      >
+        Loan
+      </button>
     </div>
   </div>
 </div>
