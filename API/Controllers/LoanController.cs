@@ -63,6 +63,28 @@ namespace API.Controllers
             return Ok(_mapper.Map<IReadOnlyList<Loan>, IReadOnlyList<LoanDto>>(loans));
         }
 
+    [HttpGet("user-loan-count")]
+public async Task<ActionResult<Dictionary<int, int>>> GetUserLoanCountsAsync()
+{
+    _logger.LogInformation("Getting loan counts by user");
+
+    // Fetch all loans
+    var spec = new LoanSpecification();
+    var loans = await _loanRepository.ListAsync(spec);
+
+    if (loans == null || !loans.Any())
+    {
+        return NotFound(new ApiResponse(404, "Loans are not found"));
+    }
+
+    // Calculate loan count per user
+    var userLoanCounts = loans
+        .GroupBy(l => l.User.Id)
+        .ToDictionary(g => g.Key, g => g.Count());
+
+    return Ok(userLoanCounts);
+}
+
          [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -114,7 +136,7 @@ namespace API.Controllers
             loan.BorrowedDate = borrowedDate;
             loan.ReturnedDate = returnedDate;
 
-            _unitOfWork.Repository<Loan>().Add(loan);
+            _unitOfWork.Repository<Loan>().Add(loan);     
             await _unitOfWork.Complete();
 
             return Ok(_mapper.Map<LoanUpdateDto>(loan));

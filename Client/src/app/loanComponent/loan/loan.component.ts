@@ -14,15 +14,17 @@ import { AuthService } from '../../core/services/auth.service';
 // export class LoanComponent{}
 export class LoanComponent implements OnInit {
   loanedBooks: Loan[] = [];
-
+  userLoanCounts: { [userId: number]: number } = {};
   constructor(private loanService: LoanService, protected authService: AuthService) {}
 
   ngOnInit(): void {
     if(this.authService.isAdmin){
       this.fetchLoans();
+      this.fetchUserLoanCounts();
 
     } else{
     this.fetchUserLoans();
+    
     }
   }
 
@@ -57,6 +59,16 @@ export class LoanComponent implements OnInit {
     } else {
       console.error('User is not logged in.');
     }
+  }
+  fetchUserLoanCounts(): void {
+    this.loanService.getUserLoanCounts().subscribe(
+      (counts: { [userId: number]: number }) => {
+        this.userLoanCounts = counts;
+      },
+      (error) => {
+        console.error('Failed to fetch user loan counts:', error);
+      }
+    );
   }
 }
 

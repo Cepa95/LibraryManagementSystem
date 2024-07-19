@@ -1,20 +1,38 @@
-
 <div class="container">
   <h2>Loaned Books</h2>
-  <div *ngIf="loanedBooks.length > 0; else noBooks">
+  <div *ngIf="authService.isAdmin; else userLoans">
+    <h3>All Loans</h3>
+    <div *ngIf="loanedBooks.length > 0; else noBooks">
       <div *ngFor="let loan of loanedBooks" class="card mb-4 box-shadow">
-          <div class="card-body">
-              <h4 class="card-title">Book ID: {{ loan.book.id }}</h4>
-              <p>Book title: {{ loan.book.title }}</p>
-              <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
-              <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
-              <p *ngIf="authService.isAdmin">User: {{ loan.user.email }}</p>
-              <p *ngIf="authService.isAdmin">Number of Borrowed Books: {{ loan.numberOfBorrowedBooks }}</p>
-              <!-- Add more details as needed -->
-          </div>
+        <div class="card-body">
+          <h4 class="card-title">Book ID: {{ loan.book.id }}</h4>
+          <p>Book title: {{ loan.book.title }}</p>
+          <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
+          <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
+          <p>User ID: {{ loan.user.id }}</p>
+          <p>Number of Borrowed Books: {{ userLoanCounts[loan.user.id] }}</p>
+          <!-- Add more details as needed -->
+        </div>
       </div>
-  </div>
-  <ng-template #noBooks>
+    </div>
+    <ng-template #noBooks>
       <p>No books loaned yet.</p>
+    </ng-template>
+  </div>
+  
+  <ng-template #userLoans>
+    <div *ngIf="loanedBooks.length > 0; else noBooks">
+      <div *ngFor="let loan of loanedBooks" class="card mb-4 box-shadow">
+        <div class="card-body">
+          <h4 class="card-title">Book ID: {{ loan.book.id }}</h4>
+          <p>Book title: {{ loan.book.title }}</p>
+          <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
+          <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
+        </div>
+      </div>
+    </div>
+    <ng-template #noBooks>
+      <p>No books loaned yet.</p>
+    </ng-template>
   </ng-template>
 </div>

@@ -20,4 +20,7 @@ export class LoanService {
   getAllLoans(): Observable<Loan[]> {
     return this.http.get<Loan[]>(`${this.baseUrl}loan`);
   }
+  getUserLoanCounts(): Observable<{ [userId: number]: number }> {
+    return this.http.get<{ [userId: number]: number }>(`${this.baseUrl}loan/user-loan-count`);
+  }
 }
