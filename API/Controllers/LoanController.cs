@@ -129,7 +129,7 @@ public async Task<ActionResult<Dictionary<int, int>>> GetUserLoanCountsAsync()
         {
             _logger.LogInformation("Creating a new loan");
 
-// Fetch all loans for the user
+    // Fetch all loans for the user
     var userLoansSpec = new LoanSpecification(loanCreateDto.UserId);
     var userLoans = await _loanRepository.ListAsync(userLoansSpec);
 
@@ -149,6 +149,28 @@ public async Task<ActionResult<Dictionary<int, int>>> GetUserLoanCountsAsync()
 
             loan.BorrowedDate = borrowedDate;
             loan.ReturnedDate = returnedDate;
+
+            var book = await _unitOfWork.Repository<Book>().GetByIdAsync(loan.BookId);
+    if (book == null)
+    {
+        return NotFound(new ApiResponse(404, $"Book with id {loan.BookId} not found"));
+    }
+
+    // Check if there are available copies
+    if (book.NumberOfCopies <= 0)
+    {
+        return BadRequest(new ApiResponse(400, "No copies of the book are available"));
+    }
+
+    // Decrement the number of copies
+    book.NumberOfCopies--;
+
+    // Update the book in the repository
+    _unitOfWork.Repository<Book>().Update(book);
+
+
+
+
 
             _unitOfWork.Repository<Loan>().Add(loan);     
             await _unitOfWork.Complete();

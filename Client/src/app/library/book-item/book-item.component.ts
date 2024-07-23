@@ -57,6 +57,9 @@ export class BookItemComponent {
       this.loanService.addLoan({ bookId, userId }).subscribe(
         response => {
           console.log('Book loaned successfully:', response);
+          if (this.book) {
+            this.book.numberOfCopies--;  // Decrement the number of copies in the frontend
+          }
           this.router.navigate(['/loan']);
         },
         error => {

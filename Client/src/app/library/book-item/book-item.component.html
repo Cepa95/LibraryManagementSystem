@@ -28,8 +28,9 @@
       <button 
         class="btn btn-sm btn-success"
         (click)="loanBook(book.id)"
-        [disabled]="isLoanLimitExceeded"
-        [ngClass]="{'btn-disabled': isLoanLimitExceeded}"
+        [disabled]="isLoanLimitExceeded || book.numberOfCopies <= 0"
+        [ngClass]="{'btn-disabled': isLoanLimitExceeded || book.numberOfCopies <= 0}"
+        [title]="isLoanLimitExceeded ? 'You have reached the maximum number of books you can loan.' : book.numberOfCopies <= 0 ? 'No copies available.' : ''"
       >
         Loan
       </button>
