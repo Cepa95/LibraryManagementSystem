@@ -46,15 +46,18 @@
     </ul>
   </div>
   <div class="navbar-collapse justify-content-end">
+
     <!-- Conditional rendering of login/logout button -->
     <ng-container *ngIf="!isLoggedIn; else loggedIn">
       <button class="btn btn-outline-light mx-3" (click)="navigateToLoginPage()">Sign in</button>
       <button class="btn btn-outline-light mx-3" (click)="navigateToSignUpPage()">Sign up</button>
     </ng-container>
     <ng-template #loggedIn>
+      <button class="btn btn-outline-light mx-3" (click)="navigateToLoanPage()"><i class="bi bi-bag"></i></button>
       <button class="btn btn-outline-light mx-3" (click)="logout()">Sign out</button>
       <button class="btn btn-outline-light mx-3"(click)="navigateToConfigPage()">User Config</button> <!-- Add User Config button -->
     </ng-template>
     <!-- End of conditional rendering -->
   </div>
 </nav>
+

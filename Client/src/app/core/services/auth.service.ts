@@ -95,6 +95,11 @@ export class AuthService {
     return !!token;
   }
 
+  get isAdmin() {
+    const userRole = this.getUserRole();
+    return userRole === 'Admin';
+  }
+
   private handleError(error: HttpErrorResponse): Observable<any> {
     console.error('An error occurred:', error);
     let errorMessage = 'An error occurred';

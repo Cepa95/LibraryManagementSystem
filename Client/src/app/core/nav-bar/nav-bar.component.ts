@@ -54,4 +54,10 @@ export class NavBarComponent implements OnInit {
       this.authService.isLoggedIn.emit(false); // Emit false after logout
     });
   }
+ 
+   navigateToLoanPage() {
+    console.log('Navigating to loan page');
+    this.router.navigate(['/loan']);
+    console.log(this.router);
+   }
 }

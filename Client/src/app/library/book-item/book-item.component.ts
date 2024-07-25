@@ -4,6 +4,9 @@ import { Book } from '../../shared/models/book';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { LibraryService } from '../library.service';
 import { AuthService } from '../../core/services/auth.service';
+import { LoanService } from '../../loanComponent/loan/loan.service';
+import { Router} from '@angular/router';
+import { Loan } from '../../shared/models/loan'; 
 
 @Component({
   selector: 'app-book-item',
@@ -14,13 +17,64 @@ export class BookItemComponent {
   @Input() book?: Book;
   @Output() bookDeleted = new EventEmitter();
   modalRef?: BsModalRef;
+  maxLoans: number = 6;
+  isLoanLimitExceeded: boolean = false;
 
   constructor(
     private modalService: BsModalService,
     private libraryService: LibraryService,
-    private authService: AuthService,
+    protected authService:AuthService,
+    private loanService: LoanService,
+    private router: Router
+  ) {}
 
-  ) { }
+  ngOnInit() {
+    this.checkLoanLimit();
+  }
+
+  checkLoanLimit() {
+    const userId = this.authService.getUserId();
+
+    if (userId) {
+      this.loanService.getUserLoanCounts().subscribe(
+        (counts: { [userId: number]: number }) => {
+          const currentLoanCount = counts[userId] || 0;
+          this.isLoanLimitExceeded = currentLoanCount >= this.maxLoans;
+        },
+        error => {
+          console.error('Failed to fetch user loan counts:', error);
+        }
+      );
+    } else {
+      console.error('User is not logged in.');
+    }
+  }
+
+  loanBook(bookId: number) {
+    const userId = this.authService.getUserId();
+
+    if (userId && !this.isLoanLimitExceeded) {
+      this.loanService.addLoan({ bookId, userId }).subscribe(
+        response => {
+          console.log('Book loaned successfully:', response);
+          if (this.book) {
+            this.book.numberOfCopies--;  // Decrement the number of copies in the frontend
+          }
+          this.router.navigate(['/loan']);
+        },
+        error => {
+          console.error('Failed to loan book:', error);
+          if (error.status === 400) {
+            console.error('Invalid input.');
+          } else if (error.status === 500) {
+            console.error('Internal server error. Please try again later.');
+          } else {
+            console.error(`Unexpected error: ${error.status} - ${error.message}`);
+          }
+        }
+      );
+    }
+  }
 
   deleteBook(id: number) {
     if (this.book) {
@@ -46,9 +100,5 @@ export class BookItemComponent {
     } else {
       console.error('Book ID is undefined');
     }
-  }
-
-  isAdmin(): boolean {
-    return this.authService.getUserRole() === 'Admin';
   }
 }

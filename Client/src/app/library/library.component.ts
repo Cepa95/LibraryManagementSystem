@@ -14,7 +14,6 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class LibraryComponent implements OnInit {
   @ViewChild('search') searchTerm?: ElementRef;
-  isAdmin: boolean = false;
   books: Book[] = [];
   publishers: Publisher[] = [];
   categories: Category[] = [];
@@ -33,21 +32,15 @@ export class LibraryComponent implements OnInit {
 
   constructor(
     private libraryService: LibraryService,
-    private authService: AuthService) {
+    protected authService: AuthService) {
     this.searchUpdated
       .pipe(debounceTime(300))
       .subscribe((search) => this.onSearch(search));
   }
   ngOnInit(): void {
-    this.checkAdminStatus();
     this.getBooks();
     this.getPublishers();
     this.getCategories();
-  }
-  
-  checkAdminStatus() {
-    const userRole = this.authService.getUserRole();
-    this.isAdmin = userRole === 'Admin';
   }
 
   getBooks() {
