@@ -56,7 +56,7 @@ on library materials and users.
 #### Resource Borrowing - Loans
 - Management of Library Resource Loans
     - Issue loan
-        - Restriction: Maximum of '5' books per member can be borrowed simultaneously
+        - Restriction: Maximum of '6' books per member can be borrowed simultaneously
     - Conclude loan
 - View All Active Loans (with Sorting and Pagination)
 - View All Loans of a Specific Book (with Sorting and Pagination)
