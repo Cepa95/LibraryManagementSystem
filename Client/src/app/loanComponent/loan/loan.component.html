@@ -1,25 +1,38 @@
 <div class="container">
   <h2>Loaned Books</h2>
   <div *ngIf="authService.isAdmin; else userLoans">
-    <h3>All Loans</h3>
-    <div *ngIf="loanedBooks.length > 0; else noBooks">
-      <div *ngFor="let loan of loanedBooks" class="card mb-4 box-shadow">
-        <div class="card-body">
-          <h4 class="card-title">Book ID: {{ loan.book.id }}</h4>
-          <p>Book title: {{ loan.book.title }}</p>
-          <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
-          <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
-          <p>User ID: {{ loan.user.id }}</p>
-          <p>Number of Borrowed Books: {{ userLoanCounts[loan.user.id] }}</p>
-          <!-- Add more details as needed -->
+    <p>Welcome, Admin!</p>
+
+    <div class="search-container">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search loans by book title, category,author and publisher"
+        [(ngModel)]="searchTerm"
+        (input)="filterLoans()"
+      />
+    </div>
+
+    <div class="search-results">
+      <div *ngIf="filteredLoans.length > 0; else noBooks">
+        <div *ngFor="let loan of filteredLoans">
+          <ng-container *ngIf="loan.user.id !== loggedInAdminId">
+            <div class="card mb-4 box-shadow">
+              <div class="card-body">
+                <h4 class="card-title">Book ID: {{ loan.book.id }}</h4>
+                <p>Book title: {{ loan.book.title }}</p>
+                <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
+                <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
+                <p>User ID: {{ loan.user.id }}</p>
+                <p>Number of Borrowed Books: {{ userLoanCounts[loan.user.id] }}</p>
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
-    <ng-template #noBooks>
-      <p>No books loaned yet.</p>
-    </ng-template>
   </div>
-  
+
   <ng-template #userLoans>
     <div *ngIf="loanedBooks.length > 0; else noBooks">
       <div *ngFor="let loan of loanedBooks" class="card mb-4 box-shadow">
@@ -31,8 +44,9 @@
         </div>
       </div>
     </div>
-    <ng-template #noBooks>
-      <p>No books loaned yet.</p>
-    </ng-template>
+  </ng-template>
+
+  <ng-template #noBooks>
+    <p>No books loaned yet.</p>
   </ng-template>
 </div>
