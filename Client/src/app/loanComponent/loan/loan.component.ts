@@ -81,4 +81,17 @@ export class LoanComponent implements OnInit {
       (loan.book.searchCriteria && loan.book.searchCriteria.toLowerCase().includes(term))
     );
   }
+  returnBook(loanId: number): void {
+    this.loanService.deleteLoan(loanId).subscribe(
+      () => {
+        this.loanedBooks = this.loanedBooks.filter(loan => loan.id !== loanId);
+        this.filteredLoans = this.filteredLoans.filter(loan => loan.id !== loanId);
+        // Optionally, you can also fetchUserLoanCounts again if needed
+        console.log('Book returned successfully');
+      },
+      (error) => {
+        console.error('Failed to return the book:', error);
+      }
+    );
+  }
 }

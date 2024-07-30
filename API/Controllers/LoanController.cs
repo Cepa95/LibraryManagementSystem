@@ -86,23 +86,29 @@ public async Task<ActionResult<Dictionary<int, int>>> GetUserLoanCountsAsync()
 }
 
          [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteLoanAsync(int id)
-        {
-            _logger.LogInformation($"Deleting a loan under id: {id}");
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+public async Task<ActionResult> DeleteLoanAsync(int id)
+{
+    _logger.LogInformation($"Deleting a loan under id: {id}");
 
-            var loan = await _unitOfWork.Repository<Loan>().GetByIdAsync(id);
+    var loan = await _unitOfWork.Repository<Loan>().GetByIdAsync(id);
 
-            if (loan == null) return NotFound(new ApiResponse(404, $"Loan under id: {id} is not found"));
+    if (loan == null) return NotFound(new ApiResponse(404, $"Loan under id: {id} is not found"));
 
-            _unitOfWork.Repository<Loan>().Delete(loan);
-            await _unitOfWork.Complete();
+    var book = await _unitOfWork.Repository<Book>().GetByIdAsync(loan.BookId);
+    if (book != null)
+    {
+        book.NumberOfCopies++;
+        _unitOfWork.Repository<Book>().Update(book);
+    }
 
-            //return NoContent();
-            return Ok(new { message = $"Loan under id: {id} successfully deleted" });
-        }
+    _unitOfWork.Repository<Loan>().Delete(loan);
+    await _unitOfWork.Complete();
+
+    return Ok(new { message = $"Loan under id: {id} successfully deleted" });
+}
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

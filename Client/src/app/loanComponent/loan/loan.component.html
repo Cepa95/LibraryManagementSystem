@@ -7,7 +7,7 @@
       <input
         type="text"
         class="form-control"
-        placeholder="Search loans by book title, category, author and publisher"
+        placeholder="Search loans by book title, category, author, and publisher"
         [(ngModel)]="searchTerm"
         (input)="filterLoans()"
       />
@@ -41,6 +41,7 @@
           <p>Book title: {{ loan.book.title }}</p>
           <p>Borrowed Date: {{ loan.borrowedDate | date }}</p>
           <p *ngIf="loan.returnedDate">Returned Date: {{ loan.returnedDate | date }}</p>
+          <button (click)="returnBook(loan.id)" class="btn btn-danger">Return Book</button>
         </div>
       </div>
     </div>

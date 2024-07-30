@@ -23,4 +23,7 @@ export class LoanService {
   getUserLoanCounts(): Observable<{ [userId: number]: number }> {
     return this.http.get<{ [userId: number]: number }>(`${this.baseUrl}loan/user-loan-count`);
   }
+  deleteLoan(loanId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}loan/${loanId}`);
+  }
 }
